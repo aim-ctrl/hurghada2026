@@ -73,6 +73,17 @@
             position: relative;
         }
 
+        .day-card.card-hidden {
+            display: none; /* Dold för vanliga användare */
+        }
+
+        body.admin-mode .day-card.card-hidden {
+            display: flex !important;
+            opacity: 0.6;
+            border: 2px dashed #ef4444;
+            background-color: #fef2f2;
+        }
+
         .day-header {
             font-weight: bold;
             color: #1e3a8a;
@@ -90,6 +101,7 @@
             margin-bottom: 4px;
             padding: 4px;
             border-radius: 4px;
+            display: inline-block;
         }
 
         [contenteditable="true"] {
@@ -122,7 +134,6 @@
             font-size: 0.85rem;
             border: 1px solid #cbd5e1;
         }
-        .meet-badge strong { color: #0f172a; }
 
         .title-field { font-weight: bold; margin-top: 5px; font-size: 1rem; }
         .desc-field { font-size: 0.9rem; color: var(--text-muted); margin-top: 5px; line-height: 1.4; }
@@ -144,25 +155,52 @@
             margin-top: 2px;
         }
 
+        .admin-controls-card {
+            background-color: #f8fafc;
+            border: 1px solid #cbd5e1;
+            padding: 8px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 0.8rem;
+        }
+
+        .field-toggles {
+            margin-top: 5px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            background: #edd;
+            padding: 4px;
+            border-radius: 4px;
+        }
+
         .nav-buttons {
             display: flex;
             gap: 5px;
-            margin-top: 12px;
-            border-top: 1px solid #f1f5f9;
-            padding-top: 8px;
+            margin-top: 8px;
         }
         .btn-nav {
             flex: 1;
-            background-color: #f1f5f9;
+            background-color: #e2e8f0;
             border: none;
             padding: 6px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             border-radius: 4px;
             cursor: pointer;
         }
+        .btn-add-card {
+            background-color: #bbf7d0;
+            color: #166534;
+            width: 100%;
+            margin-top: 5px;
+        }
+        .btn-delete-card {
+            background-color: #fecaca;
+            color: #991b1b;
+        }
 
         .type-select {
-            display: none;
+            width: 100%;
             margin-top: 5px;
             font-size: 0.8rem;
             padding: 3px;
@@ -183,12 +221,11 @@
 
     <button class="btn btn-admin" onclick="checkPassword()">🔑 Admin</button>
 
-    <!-- Adminverktyg -->
     <div class="admin-box" id="adminBox">
         <h3>Admin-läge aktivt</h3>
-        <p>1. Ändra tider, samlingsplatser eller info direkt i korten.<br>
-           2. För att ändra Uber-länken klickar du på texten i rutan längst ner.<br>
-           3. Klicka på knappen nedan för att spara och ladda ner din nya fil.</p>
+        <p>• Ändra <strong>all text, titlar och etiketter</strong> direkt i korten.<br>
+           • Använd ögat (👁️/🙈) för att visa/dölja kort. Bocka ur fält du vill gömma.<br>
+           • Använd pilarna för att kasta om eller lägg till nya kort mitt i schemat.</p>
         <button class="btn btn-save" onclick="downloadNewHTML()">💾 Ladda ner NY index.html-fil</button>
     </div>
 
@@ -211,7 +248,13 @@
                 "desc": "Incheckning, sen middag på hotellet och samling på rummen.",
                 "address": "Pickalbatros Palace Resort",
                 "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Pickalbatros%20Palace",
-                "type": "hotel"
+                "type": "hotel",
+                "uberLabel": "👉 Öppna i Uber-appen",
+                "showTime": true,
+                "showMeeting": true,
+                "showDesc": true,
+                "showAddress": true,
+                "isHidden": false
             },
             {
                 "id": 2,
@@ -223,7 +266,13 @@
                 "desc": "Gemensam promenad längs yachterna, glass och caféhäng i den vackra marinan.",
                 "address": "Hurghada Marina",
                 "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Hurghada%20Marina",
-                "type": "city"
+                "type": "city",
+                "uberLabel": "👉 Öppna i Uber-appen",
+                "showTime": true,
+                "showMeeting": true,
+                "showDesc": true,
+                "showAddress": true,
+                "isHidden": false
             },
             {
                 "id": 3,
@@ -235,7 +284,13 @@
                 "desc": "Stadspuls, basarer, intensiv shopping, souvenirer och färsk juice.",
                 "address": "Sheraton Road (Centrum)",
                 "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Sheraton%20Road",
-                "type": "city"
+                "type": "city",
+                "uberLabel": "👉 Öppna i Uber-appen",
+                "showTime": true,
+                "showMeeting": true,
+                "showDesc": true,
+                "showAddress": true,
+                "isHidden": false
             },
             {
                 "id": 4,
@@ -247,7 +302,13 @@
                 "desc": "Båttur på dagen (08-17). Kl 20:00 åker vi till Boska Lounge. Bowling för barnen vägg i vägg.",
                 "address": "Boska Cafe (El Kawther)",
                 "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Boska%20Hurghada",
-                "type": "city"
+                "type": "city",
+                "uberLabel": "👉 Öppna i Uber-appen",
+                "showTime": true,
+                "showMeeting": true,
+                "showDesc": true,
+                "showAddress": true,
+                "isHidden": false
             },
             {
                 "id": 5,
@@ -259,7 +320,13 @@
                 "desc": "Shisha, te och storbildsskärm för vuxna. Stort, säkert lekområde med studsmatta för barnen.",
                 "address": "King Grill (El Mamsha)",
                 "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=King%20Grill%20Hurghada",
-                "type": "special"
+                "type": "special",
+                "uberLabel": "👉 Öppna i Uber-appen",
+                "showTime": true,
+                "showMeeting": true,
+                "showDesc": true,
+                "showAddress": true,
+                "isHidden": false
             },
             {
                 "id": 6,
@@ -271,7 +338,13 @@
                 "desc": "Undantag: Ingen hotellmat ikväll! Avresa 17:30. Stor libanesisk meze-middag vid marinan. Måste förbokas!",
                 "address": "MerBey (El Gouna Marina)",
                 "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=MerBey%20El%20Gouna",
-                "type": "special"
+                "type": "special",
+                "uberLabel": "👉 Öppna i Uber-appen",
+                "showTime": true,
+                "showMeeting": true,
+                "showDesc": true,
+                "showAddress": true,
+                "isHidden": false
             },
             {
                 "id": 7,
@@ -283,7 +356,13 @@
                 "desc": "Shopping med fasta priser bara 5 minuter bort. Skönt häng på caféerna utanför efteråt.",
                 "address": "Senzo Mall",
                 "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Senzo%20Mall",
-                "type": "city"
+                "type": "city",
+                "uberLabel": "👉 Öppna i Uber-appen",
+                "showTime": true,
+                "showMeeting": true,
+                "showDesc": true,
+                "showAddress": true,
+                "isHidden": false
             },
             {
                 "id": 8,
@@ -295,7 +374,13 @@
                 "desc": "Bred, modern och helt bilfri gågata. Skönt för hela storfamiljen på 25 personer att gå samlat.",
                 "address": "El Mamsha Promenade",
                 "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Esplanada%20Sphinx%20Mamsha",
-                "type": "city"
+                "type": "city",
+                "uberLabel": "👉 Öppna i Uber-appen",
+                "showTime": true,
+                "showMeeting": true,
+                "showDesc": true,
+                "showAddress": true,
+                "isHidden": false
             },
             {
                 "id": 9,
@@ -307,7 +392,13 @@
                 "desc": "Båttur på dagen (08-17). Skön och välförtjänt kväll på hotellet för att återhämta krafterna.",
                 "address": "Pickalbatros Palace Resort",
                 "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Pickalbatros%20Palace",
-                "type": "hotel"
+                "type": "hotel",
+                "uberLabel": "👉 Öppna i Uber-appen",
+                "showTime": true,
+                "showMeeting": true,
+                "showDesc": true,
+                "showAddress": true,
+                "isHidden": false
             },
             {
                 "id": 10,
@@ -319,7 +410,13 @@
                 "desc": "Dags för de sista inköpen, presenterna och den slutgiltiga prutningen där vi nu hittar bra.",
                 "address": "Sheraton Road (Centrum)",
                 "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Sheraton%20Road",
-                "type": "city"
+                "type": "city",
+                "uberLabel": "👉 Öppna i Uber-appen",
+                "showTime": true,
+                "showMeeting": true,
+                "showDesc": true,
+                "showAddress": true,
+                "isHidden": false
             },
             {
                 "id": 11,
@@ -331,7 +428,13 @@
                 "desc": "Repris på det vinnande konceptet där barnen bowlar och vuxna tar en kaffe på Boska.",
                 "address": "Boska Cafe (El Kawther)",
                 "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Boska%20Hurghada",
-                "type": "city"
+                "type": "city",
+                "uberLabel": "👉 Öppna i Uber-appen",
+                "showTime": true,
+                "showMeeting": true,
+                "showDesc": true,
+                "showAddress": true,
+                "isHidden": false
             },
             {
                 "id": 12,
@@ -343,7 +446,13 @@
                 "desc": "Eftm: Ridning barbacka i havet (för valda). Kl 20:00: Gemensam utgång till King Grill för alla.",
                 "address": "King Grill (Samling kväll)",
                 "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=King%20Grill%20Hurghada",
-                "type": "special"
+                "type": "special",
+                "uberLabel": "👉 Öppna i Uber-appen",
+                "showTime": true,
+                "showMeeting": true,
+                "showDesc": true,
+                "showAddress": true,
+                "isHidden": false
             },
             {
                 "id": 13,
@@ -355,7 +464,13 @@
                 "desc": "Den stora avslutningskvällen! Stor lounge bokad på klipporna direkt över havet. Shisha & efterrätter.",
                 "address": "Granada Restaurant",
                 "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Granada%20Hurghada",
-                "type": "special"
+                "type": "special",
+                "uberLabel": "👉 Öppna i Uber-appen",
+                "showTime": true,
+                "showMeeting": true,
+                "showDesc": true,
+                "showAddress": true,
+                "isHidden": false
             },
             {
                 "id": 14,
@@ -367,7 +482,13 @@
                 "desc": "Packning i lugn och ro så att morgondagen blir stressfri. Stor samling i hotellträdgården för att runda av.",
                 "address": "Pickalbatros Palace",
                 "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Pickalbatros%20Palace",
-                "type": "hotel"
+                "type": "hotel",
+                "uberLabel": "👉 Öppna i Uber-appen",
+                "showTime": true,
+                "showMeeting": true,
+                "showDesc": true,
+                "showAddress": true,
+                "isHidden": false
             },
             {
                 "id": 15,
@@ -379,7 +500,13 @@
                 "desc": "Sista doppen i poolen på förmiddagen, lunch på hotellet. Transfern hämtar oss ca kl 15:00.",
                 "address": "Hurghada Airport (Terminal 1)",
                 "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Hurghada%20Airport",
-                "type": "hotel"
+                "type": "hotel",
+                "uberLabel": "👉 Öppna i Uber-appen",
+                "showTime": true,
+                "showMeeting": true,
+                "showDesc": true,
+                "showAddress": true,
+                "isHidden": false
             }
         ];
         // ==========================================
@@ -391,20 +518,57 @@
             grid.innerHTML = '';
             savedData.forEach((day, index) => {
                 const card = document.createElement('div');
-                card.className = `day-card ${day.type}`;
+                card.className = `day-card ${day.type} ${day.isHidden ? 'card-hidden' : ''}`;
                 
-                let uberSection = '';
-                if (isAdmin) {
-                    uberSection = `
-                        <div>Mål: <span class="editable-field" data-field="address" data-index="${index}" contenteditable="true">${day.address}</span></div>
-                        <div>Uber-URL: <span class="editable-field" data-field="uberUrl" data-index="${index}" contenteditable="true" style="font-size:10px; word-break:break-all;">${day.uberUrl}</span></div>
-                    `;
-                } else {
-                    uberSection = `
-                        🚗 <strong>Destination:</strong> ${day.address}<br>
-                        <a href="${day.uberUrl}" target="_blank">👉 Öppna i Uber-appen</a>
-                    `;
+                // Kontrollera synlighet för fält
+                const timeHtml = (day.showTime || isAdmin) ? `<span class="time-badge editable-field" data-field="time" data-index="${index}" contenteditable="${isAdmin}">${day.time}</span>` : '';
+                const meetHtml = (day.showMeeting || isAdmin) ? `<span class="meet-badge">Samling: <strong class="editable-field" data-field="meetingPlace" data-index="${index}" contenteditable="${isAdmin}">${day.meetingPlace}</strong></span>` : '';
+                const descHtml = (day.showDesc || isAdmin) ? `<div class="desc-field editable-field" data-field="desc" data-index="${index}" contenteditable="${isAdmin}">${day.desc}</div>` : '';
+                
+                let uberHtml = '';
+                if (day.showAddress || isAdmin) {
+                    if (isAdmin) {
+                        uberHtml = `
+                            <div class="address-box">
+                                <div>Mål: <span class="editable-field" data-field="address" data-index="${index}" contenteditable="true">${day.address}</span></div>
+                                <div>Knapptext: <span class="editable-field" data-field="uberLabel" data-index="${index}" contenteditable="true">${day.uberLabel || '👉 Öppna i Uber-appen'}</span></div>
+                                <div>Uber-URL: <span class="editable-field" data-field="uberUrl" data-index="${index}" contenteditable="true" style="font-size:10px; word-break:break-all;">${day.uberUrl}</span></div>
+                            </div>`;
+                    } else {
+                        uberHtml = `
+                            <div class="address-box">
+                                🚗 <strong>Destination:</strong> ${day.address}<br>
+                                <a href="${day.uberUrl}" target="_blank">${day.uberLabel || '👉 Öppna i Uber-appen'}</a>
+                            </div>`;
+                    }
                 }
+
+                // Administrationspanelen inuti själva kortet
+                const adminPanel = isAdmin ? `
+                    <div class="admin-controls-card">
+                        <div style="font-weight:bold; margin-bottom:5px;">⚙️ Inställningar för detta kort:</div>
+                        <button class="btn-nav" onclick="toggleVisibility(${index})" style="background-color: ${day.isHidden ? '#fca5a5' : '#cbd5e1'}">
+                            ${day.isHidden ? '🙈 Dold (Klicka för att visa)' : '👁️ Synlig (Klicka för att dölja)'}
+                        </button>
+                        <div class="field-toggles">
+                            <label><input type="checkbox" ${day.showTime ? 'checked' : ''} onchange="toggleField(${index}, 'showTime')"> Tid</label>
+                            <label><input type="checkbox" ${day.showMeeting ? 'checked' : ''} onchange="toggleField(${index}, 'showMeeting')"> Samling</label>
+                            <label><input type="checkbox" ${day.showDesc ? 'checked' : ''} onchange="toggleField(${index}, 'showDesc')"> Info</label>
+                            <label><input type="checkbox" ${day.showAddress ? 'checked' : ''} onchange="toggleField(${index}, 'showAddress')"> Uber/Mål</label>
+                        </div>
+                        <select class="type-select" onchange="updateType(${index}, this.value)">
+                            <option value="city" ${day.type === 'city' ? 'selected' : ''}>Stad / Shopping (Orange)</option>
+                            <option value="special" ${day.type === 'special' ? 'selected' : ''}>Aktivitet (Grön)</option>
+                            <option value="boat" ${day.type === 'boat' ? 'selected' : ''}>Båttur (Blå)</option>
+                            <option value="hotel" ${day.type === 'hotel' ? 'selected' : ''}>Hotell (Grå)</option>
+                        </select>
+                        <div class="nav-buttons">
+                            <button class="btn-nav" onclick="swapActivities(${index}, ${index - 1})">◀ Flytta bakåt</button>
+                            <button class="btn-nav" onclick="swapActivities(${index}, ${index + 1})">Flytta framåt ▶</button>
+                            <button class="btn-nav btn-delete-card" onclick="deleteCard(${index})">🗑️ Radera</button>
+                        </div>
+                    </div>
+                ` : '';
 
                 card.innerHTML = `
                     <div class="day-header">
@@ -412,29 +576,25 @@
                         <span class="date-tag editable-field" data-field="dateTag" data-index="${index}" contenteditable="${isAdmin}">${day.dateTag}</span>
                     </div>
                     <div class="meta-row">
-                        <span class="time-badge editable-field" data-field="time" data-index="${index}" contenteditable="${isAdmin}">${day.time}</span>
-                        <span class="meet-badge">Samling: <strong class="editable-field" data-field="meetingPlace" data-index="${index}" contenteditable="${isAdmin}">${day.meetingPlace}</strong></span>
+                        ${timeHtml}
+                        ${meetHtml}
                     </div>
                     <div class="title-field editable-field" data-field="title" data-index="${index}" contenteditable="${isAdmin}">${day.title}</div>
-                    <div class="desc-field editable-field" data-field="desc" data-index="${index}" contenteditable="${isAdmin}">${day.desc}</div>
-                    
-                    <select class="type-select" data-index="${index}" onchange="updateType(${index}, this.value)" style="display: ${isAdmin ? 'block' : 'none'}">
-                        <option value="city" ${day.type === 'city' ? 'selected' : ''}>Stad / Shopping</option>
-                        <option value="special" ${day.type === 'special' ? 'selected' : ''}>Restaurang / Aktivitet</option>
-                        <option value="boat" ${day.type === 'boat' ? 'selected' : ''}>Båttur</option>
-                        <option value="hotel" ${day.type === 'hotel' ? 'selected' : ''}>Hotell</option>
-                    </select>
-
-                    <div class="address-box">
-                        ${uberSection}
-                    </div>
-
-                    <div class="nav-buttons" style="display: ${isAdmin ? 'flex' : 'none'}">
-                        <button class="btn-nav" onclick="swapActivities(${index}, ${index - 1})">◀ Flytta bakåt</button>
-                        <button class="btn-nav" onclick="swapActivities(${index}, ${index + 1})">Flytta framåt ▶</button>
-                    </div>
+                    ${descHtml}
+                    ${uberHtml}
+                    ${adminPanel}
                 `;
+
                 grid.appendChild(card);
+
+                // Skapa en "Lägg till kort"-knapp mellan korten om adminläge är på
+                if (isAdmin) {
+                    const addBtnContainer = document.createElement('div');
+                    addBtnContainer.style.gridColumn = '1 / -1';
+                    addBtnContainer.style.textAlign = 'center';
+                    addBtnContainer.innerHTML = `<button class="btn btn-nav btn-add-card" onclick="addCardAfter(${index})">➕ Lägg till nytt kort efter ${day.dayName}</button>`;
+                    grid.appendChild(addBtnContainer);
+                }
             });
 
             if (isAdmin) {
@@ -451,6 +611,7 @@
         function checkPassword() {
             if (isAdmin) {
                 isAdmin = false;
+                document.body.classList.remove('admin-mode');
                 document.getElementById('adminBox').style.display = 'none';
                 render();
                 return;
@@ -458,6 +619,7 @@
             const input = prompt("Skriv in din administratörskod:");
             if (input === ADMIN_PASSWORD) {
                 isAdmin = true;
+                document.body.classList.add('admin-mode');
                 document.getElementById('adminBox').style.display = 'block';
                 render();
             } else if (input !== null) {
@@ -465,19 +627,57 @@
             }
         }
 
+        function toggleVisibility(index) {
+            savedData[index].isHidden = !savedData[index].isHidden;
+            render();
+        }
+
+        function toggleField(index, fieldName) {
+            savedData[index][fieldName] = !savedData[index][fieldName];
+            render();
+        }
+
         function updateType(index, value) {
             savedData[index].type = value;
             render();
         }
 
+        function deleteCard(index) {
+            if(confirm("Är du säker på att du vill radera detta kort permanent?")) {
+                savedData.splice(index, 1);
+                render();
+            }
+        }
+
+        function addCardAfter(index) {
+            const currentDay = savedData[index];
+            const newCard = {
+                "id": Date.now(),
+                "dayName": currentDay.dayName,
+                "dateTag": "Extra pass",
+                "time": "Kl 00:00",
+                "meetingPlace": "Lobby",
+                "title": "Ny aktivitet",
+                "desc": "Beskrivning av aktivitet här.",
+                "address": "Destination",
+                "uberUrl": "https://m.uber.com",
+                "type": "city",
+                "uberLabel": "👉 Öppna i Uber-appen",
+                "showTime": true,
+                "showMeeting": true,
+                "showDesc": true,
+                "showAddress": true,
+                "isHidden": false
+            };
+            savedData.splice(index + 1, 0, newCard);
+            render();
+        }
+
         function swapActivities(idx1, idx2) {
             if (idx1 < 0 || idx1 >= savedData.length || idx2 < 0 || idx2 >= savedData.length) return;
-            const keysToSwap = ['time', 'meetingPlace', 'title', 'desc', 'address', 'uberUrl', 'type'];
-            keysToSwap.forEach(key => {
-                const temp = savedData[idx1][key];
-                savedData[idx1][key] = savedData[idx2][key];
-                savedData[idx2][key] = temp;
-            });
+            const temp = savedData[idx1];
+            savedData[idx1] = savedData[idx2];
+            savedData[idx2] = temp;
             render();
         }
 
@@ -491,10 +691,7 @@
                 rawCode = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
             }
 
-            // Formatera JSON med radbrytningar och indrag (4 mellanslag) för den nedladdade filen
             const dataDataString = JSON.stringify(savedData, null, 4);
-            
-            // Anpassat regex för att matcha hela det utspridda savedData-blocket
             const regex = /(let savedData = )\[[\s\S]*?\](;)/;
             let updatedCode = rawCode.replace(regex, `$1${dataDataString}$2`);
             updatedCode = updatedCode.replace('display: block;', 'display: none;');
