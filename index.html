@@ -129,7 +129,6 @@
             margin-top: 10px;
             color: #475569;
         }
-        .address-box a { color: var(--accent-blue); text-decoration: none; font-weight: bold; }
 
         .nav-buttons {
             display: flex;
@@ -156,7 +155,6 @@
             padding: 3px;
         }
 
-        /* Färgteman baserat på typ */
         .day-card.hotel { border-left: 6px solid #64748b; }
         .day-card.city { border-left: 6px solid var(--primary); }
         .day-card.boat { border-left: 6px solid var(--accent-blue); }
@@ -170,28 +168,30 @@
         <p>Gemensam Reseplanering • 25 Personer</p>
     </header>
 
-    <button class="btn btn-admin" onclick="toggleAdmin()">🔑 Admin</button>
+    <button class="btn btn-admin" onclick="checkPassword()">🔑 Admin</button>
 
-    <!-- Adminverktyg (Dolt som standard) -->
+    <!-- Adminverktyg (Låst med kod) -->
     <div class="admin-box" id="adminBox">
         <h3>Admin-läge aktivt</h3>
-        <p>1. Du kan nu klicka och <strong>ändra all text, tider och adresser direkt i korten</strong> nedan.<br>
-           2. Använd pilarna i botten av korten för att flytta en aktivitet till en annan dag.<br>
-           3. När du är klar, klicka på knappen nedan och följ instruktionerna.</p>
+        <p>1. Du kan nu ändra tider, titlar, texter och adresser direkt i korten nedan.<br>
+           2. Använd pilarna i botten för att flytta runt aktiviteter mellan dagarna.<br>
+           3. Klicka på knappen nedan för att spara till GitHub när du är klar.</p>
         <button class="btn btn-save" onclick="exportData()">💾 1. Generera kod för GitHub</button>
-        <p><strong>Kopiera denna textrad (trippelklicka):</strong></p>
+        <p><strong>Kopiera denna textrad:</strong></p>
         <textarea id="exportOutput" readonly onclick="this.select()"></textarea>
-        <p style="font-size:0.85rem; color:#71717a;">Go till din index.html på GitHub -> Klicka på pennan (Edit) -> Hitta raden <code>const savedData = [...]</code> (runt rad 138) och ersätt den med raden ovan -> Spara på GitHub!</p>
     </div>
 
     <div class="schedule-grid" id="grid"></div>
 
     <script>
         // ==========================================
-        // DATA-RADEN DU ERSÄTTER VID UPPDATERING:
+        // ADMIN-KOD: Ändra '1234' till vad du vill ha!
         // ==========================================
+        const ADMIN_PASSWORD = "1234"; 
+        // ==========================================
+
+        // DIN DATA:
         const savedData = [{"id":1,"dayName":"Fredag 26 juni","dateTag":"Ankomst","time":"Valfri tid","title":"Ankomst & Landa","desc":"Incheckning, sen middag på hotellet och samling på rummen.","address":"Hotell: Pickalbatros Palace Aqua Park","type":"hotel"},{"id":2,"dayName":"Lördag 27 juni","dateTag":"Dag 2","time":"Kl 20:00","title":"Premiär i Nya Marinan","desc":"Gemensam promenad längs yachterna, glass och caféhäng i den vackra marinan.","address":"Adress: Hurghada Marina Boulevard","type":"city"},{"id":3,"dayName":"Söndag 28 juni","dateTag":"Dag 3","time":"Kl 20:00","title":"Sheraton Road (Runda 1)","desc":"Stadspuls, basarer, intensiv shopping, souvenirer och färsk juice.","address":"Adress: Sheraton Road, Centrum","type":"city"},{"id":4,"dayName":"Måndag 29 juni","dateTag":"Dag 4","time":"Kl 20:00","title":"Boska & Bowling (Runda 1)","desc":"Båttur på dagen (08-17). Kl 20:00 åker vi till Boska Lounge. Bowling för barnen vägg i vägg.","address":"Café: Boska, El Kawther (Bowling Street)","type":"city"},{"id":5,"dayName":"Tisdag 30 juni","dateTag":"Dag 5","time":"Kl 20:00","title":"King Grill (Runda 1)","desc":"Shisha, te och storbildsskärm för vuxna. Stort, säkert lekområde med studsmatta för barnen.","address":"Restaurang: King Grill, El Mamsha","type":"special"},{"id":6,"dayName":"Onsdag 1 juli","dateTag":"Dag 6","time":"Kl 17:30","title":"El Gouna & Långbord på MerBey","desc":"Undantag: Ingen hotellmat ikväll! Avresa 17:30. Stor libanesisk meze-middag vid marinan. Måste förbokas!","address":"Restaurang: MerBey, Abu Tig Marina, El Gouna","type":"special"},{"id":7,"dayName":"Torsdag 2 juli","dateTag":"Dag 7","time":"Kl 20:00","title":"Senzo Mall & Shisha","desc":"Shopping med fasta priser bara 5 minuter bort. Skönt häng på caféerna utanför efteråt.","address":"Plats: Senzo Mall, Safaga Road","type":"city"},{"id":8,"dayName":"Fredag 3 juli","dateTag":"Dag 8","time":"Kl 20:00","title":"Kvällspromenad på El Mamsha","desc":"Bred, modern och helt bilfri gågata. Skönt för hela storfamiljen på 25 personer att gå samlat.","address":"Plats: El Mamsha Promenade","type":"city"},{"id":9,"dayName":"Lördag 4 juli","dateTag":"Dag 9","time":"Kl 20:00","title":"Hotellmys efter Båttur 2","desc":"Båttur på dagen (08-17). Skön och välförtjänt kväll på hotellet för att återhämta krafterna.","address":"Hotell: Pickalbatros Palace","type":"hotel"},{"id":10,"dayName":"Söndag 5 juli","dateTag":"Dag 10","time":"Kl 20:00","title":"Sheraton Road (Runda 2)","desc":"Dags för de sista inköpen, presenterna och den slutgiltiga prutningen där vi nu hittar bra.","address":"Plats: Sheraton Road","type":"city"},{"id":11,"dayName":"Måndag 6 juli","dateTag":"Dag 11","time":"Kl 20:00","title":"Boska & Bowling (Runda 2)","desc":"Repris på det vinnande konceptet där barnen bowlar och vuxna tar en kaffe på Boska.","address":"Plats: El Kawther","type":"city"},{"id":12,"dayName":"Tisdag 7 juli","dateTag":"Dag 12","time":"Kl 15:30","title":"Hästridning med Havsbad & King Grill","desc":"Eftm: Ridning barbacka i havet (för valda). Kl 20:00: Gemensam utgång till King Grill för alla.","address":"Stall: Lokalt stall (hämtar på hotellet) / King Grill","type":"special"},{"id":13,"dayName":"Onsdag 8 juli","dateTag":"Dag 13","time":"Kl 20:00","title":"Stor final på Granada Restaurant","desc":"Den stora avslutningskvällen! Stor lounge bokad på klipporna direkt över havet. Shisha & efterrätter.","address":"Restaurang: Granada, Old Sheraton Road","type":"special"},{"id":14,"dayName":"Torsdag 9 juli","dateTag":"Dag 14","time":"Kl 20:00","title":"Sista kvällen på hotellet","desc":"Packning i lugn och ro så att morgondagen blir stressfri. Stor samling i hotellträdgården för att runda av.","address":"Hotellområdet","type":"hotel"},{"id":15,"dayName":"Fredag 10 juli","dateTag":"Hemresa","time":"Kl 15:00","title":"Hemresa mot Sverige","desc":"Sista doppen i poolen på förmiddagen, lunch på hotellet. Transfern hämtar oss ca kl 15:00.","address":"Flygplats: Hurghada International Airport","type":"hotel"}];
-        // ==========================================
 
         let isAdmin = false;
         const grid = document.getElementById('grid');
@@ -201,7 +201,6 @@
             savedData.forEach((day, index) => {
                 const card = document.createElement('div');
                 card.className = `day-card ${day.type}`;
-                card.id = `card-${index}`;
                 
                 card.innerHTML = `
                     <div class="day-header">
@@ -226,14 +225,13 @@
                     </div>
 
                     <div class="nav-buttons" style="display: ${isAdmin ? 'flex' : 'none'}">
-                        <button class="btn-nav" onclick="swapActivities(${index}, ${index - 1})">◀ Flytta upp/bakåt</button>
-                        <button class="btn-nav" onclick="swapActivities(${index}, ${index + 1})">Flytta ner/framåt ▶</button>
+                        <button class="btn-nav" onclick="swapActivities(${index}, ${index - 1})">◀ Flytta bakåt</button>
+                        <button class="btn-nav" onclick="swapActivities(${index}, ${index + 1})">Flytta framåt ▶</button>
                     </div>
                 `;
                 grid.appendChild(card);
             });
 
-            // Lyssna på ändringar i textfälten under admin-läge
             if (isAdmin) {
                 document.querySelectorAll('.editable-field').forEach(field => {
                     field.addEventListener('blur', (e) => {
@@ -245,10 +243,23 @@
             }
         }
 
-        function toggleAdmin() {
-            isAdmin = !isAdmin;
-            document.getElementById('adminBox').style.display = isAdmin ? 'block' : 'none';
-            render();
+        function checkPassword() {
+            if (isAdmin) {
+                // Om admin redan är igång stänger vi bara av det
+                isAdmin = false;
+                document.getElementById('adminBox').style.display = 'none';
+                render();
+                return;
+            }
+
+            const input = prompt("Skriv in din administratörskod:");
+            if (input === ADMIN_PASSWORD) {
+                isAdmin = true;
+                document.getElementById('adminBox').style.display = 'block';
+                render();
+            } else if (input !== null) {
+                alert("Fel kod!");
+            }
         }
 
         function updateType(index, value) {
@@ -258,8 +269,6 @@
 
         function swapActivities(idx1, idx2) {
             if (idx1 < 0 || idx1 >= savedData.length || idx2 < 0 || idx2 >= savedData.length) return;
-            
-            // Vi byter bara ut innehållet (tid, titel, beskrivning, adress, typ) men behåller dagens namn och datum fasta.
             const keysToSwap = ['time', 'title', 'desc', 'address', 'type'];
             keysToSwap.forEach(key => {
                 const temp = savedData[idx1][key];
@@ -270,15 +279,12 @@
         }
 
         function exportData() {
-            // Generera den exakta textraden som användaren kan klistra in i sin kod
             const jsonStr = JSON.stringify(savedData);
-            const outputText = `const savedData = ${jsonStr};`;
-            document.getElementById('exportOutput').value = outputText;
+            document.getElementById('exportOutput').value = `const savedData = ${jsonStr};`;
             document.getElementById('exportOutput').select();
-            alert("Koden är genererad och markerad i textrutan nedan! Kopiera den och klistra in på GitHub.");
+            alert("Klart! Kopiera raden i rutan och klistra in den på GitHub.");
         }
 
-        // Starta appen
         render();
     </script>
 </body>
