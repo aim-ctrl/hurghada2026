@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reseplanerare - Hurghada 2026</title>
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --primary: #d97706;
+            --text-main: #1f2937;
+            --text-muted: #4b5563;
+            --accent-blue: #0284c7;
+            --accent-green: #059669;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 15px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: white;
+            padding: 25px 15px;
+            border-radius: 12px;
+        }
+        header h1 { margin: 0 0 5px 0; font-size: 1.8rem; }
+        header p { margin: 0; opacity: 0.9; font-size: 1rem; }
+
+        .admin-box {
+            background-color: #fef08a;
+            border: 2px dashed #ca8a04;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .admin-box textarea {
+            width: 100%;
+            height: 80px;
+            margin-top: 8px;
+            box-sizing: border-box;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        .btn {
+            background-color: #1e3a8a;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .btn-admin { background-color: #4b5563; float: right; margin-top: -50px; }
+        .btn-save { background-color: #059669; }
+
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 15px;
+        }
+
+        .day-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid #e5e7eb;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .day-header {
+            font-weight: bold;
+            color: #1e3a8a;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .day-header .date-tag { font-size: 0.85rem; color: var(--text-muted); }
+
+        .editable-field {
+            margin-bottom: 8px;
+            padding: 4px;
+            border-radius: 4px;
+        }
+
+        [contenteditable="true"] {
+            background-color: #fef08a !important;
+            border: 1px dashed #ca8a04;
+            outline: none;
+        }
+
+        .time-badge {
+            background-color: #e0f2fe;
+            color: #0369a1;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            display: inline-block;
+        }
+
+        .title-field { font-weight: bold; margin-top: 5px; font-size: 1rem; }
+        .desc-field { font-size: 0.9rem; color: var(--text-muted); margin-top: 5px; line-height: 1.4; }
+        
+        .address-box {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            color: #475569;
+        }
+        .address-box a { color: var(--accent-blue); text-decoration: none; font-weight: bold; }
+
+        .nav-buttons {
+            display: flex;
+            gap: 5px;
+            margin-top: 12px;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 8px;
+        }
+        .btn-nav {
+            flex: 1;
+            background-color: #f1f5f9;
+            border: none;
+            padding: 6px;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-nav:hover { background-color: #e2e8f0; }
+
+        .type-select {
+            display: none;
+            margin-top: 5px;
+            font-size: 0.8rem;
+            padding: 3px;
+        }
+
+        /* Färgteman baserat på typ */
+        .day-card.hotel { border-left: 6px solid #64748b; }
+        .day-card.city { border-left: 6px solid var(--primary); }
+        .day-card.boat { border-left: 6px solid var(--accent-blue); }
+        .day-card.special { border-left: 6px solid var(--accent-green); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Hurghada 2026 🌴</h1>
+        <p>Gemensam Reseplanering • 25 Personer</p>
+    </header>
+
+    <button class="btn btn-admin" onclick="toggleAdmin()">🔑 Admin</button>
+
+    <!-- Adminverktyg (Dolt som standard) -->
+    <div class="admin-box" id="adminBox">
+        <h3>Admin-läge aktivt</h3>
+        <p>1. Du kan nu klicka och <strong>ändra all text, tider och adresser direkt i korten</strong> nedan.<br>
+           2. Använd pilarna i botten av korten för att flytta en aktivitet till en annan dag.<br>
+           3. När du är klar, klicka på knappen nedan och följ instruktionerna.</p>
+        <button class="btn btn-save" onclick="exportData()">💾 1. Generera kod för GitHub</button>
+        <p><strong>Kopiera denna textrad (trippelklicka):</strong></p>
+        <textarea id="exportOutput" readonly onclick="this.select()"></textarea>
+        <p style="font-size:0.85rem; color:#71717a;">Go till din index.html på GitHub -> Klicka på pennan (Edit) -> Hitta raden <code>const savedData = [...]</code> (runt rad 138) och ersätt den med raden ovan -> Spara på GitHub!</p>
+    </div>
+
+    <div class="schedule-grid" id="grid"></div>
+
+    <script>
+        // ==========================================
+        // DATA-RADEN DU ERSÄTTER VID UPPDATERING:
+        // ==========================================
+        const savedData = [{"id":1,"dayName":"Fredag 26 juni","dateTag":"Ankomst","time":"Valfri tid","title":"Ankomst & Landa","desc":"Incheckning, sen middag på hotellet och samling på rummen.","address":"Hotell: Pickalbatros Palace Aqua Park","type":"hotel"},{"id":2,"dayName":"Lördag 27 juni","dateTag":"Dag 2","time":"Kl 20:00","title":"Premiär i Nya Marinan","desc":"Gemensam promenad längs yachterna, glass och caféhäng i den vackra marinan.","address":"Adress: Hurghada Marina Boulevard","type":"city"},{"id":3,"dayName":"Söndag 28 juni","dateTag":"Dag 3","time":"Kl 20:00","title":"Sheraton Road (Runda 1)","desc":"Stadspuls, basarer, intensiv shopping, souvenirer och färsk juice.","address":"Adress: Sheraton Road, Centrum","type":"city"},{"id":4,"dayName":"Måndag 29 juni","dateTag":"Dag 4","time":"Kl 20:00","title":"Boska & Bowling (Runda 1)","desc":"Båttur på dagen (08-17). Kl 20:00 åker vi till Boska Lounge. Bowling för barnen vägg i vägg.","address":"Café: Boska, El Kawther (Bowling Street)","type":"city"},{"id":5,"dayName":"Tisdag 30 juni","dateTag":"Dag 5","time":"Kl 20:00","title":"King Grill (Runda 1)","desc":"Shisha, te och storbildsskärm för vuxna. Stort, säkert lekområde med studsmatta för barnen.","address":"Restaurang: King Grill, El Mamsha","type":"special"},{"id":6,"dayName":"Onsdag 1 juli","dateTag":"Dag 6","time":"Kl 17:30","title":"El Gouna & Långbord på MerBey","desc":"Undantag: Ingen hotellmat ikväll! Avresa 17:30. Stor libanesisk meze-middag vid marinan. Måste förbokas!","address":"Restaurang: MerBey, Abu Tig Marina, El Gouna","type":"special"},{"id":7,"dayName":"Torsdag 2 juli","dateTag":"Dag 7","time":"Kl 20:00","title":"Senzo Mall & Shisha","desc":"Shopping med fasta priser bara 5 minuter bort. Skönt häng på caféerna utanför efteråt.","address":"Plats: Senzo Mall, Safaga Road","type":"city"},{"id":8,"dayName":"Fredag 3 juli","dateTag":"Dag 8","time":"Kl 20:00","title":"Kvällspromenad på El Mamsha","desc":"Bred, modern och helt bilfri gågata. Skönt för hela storfamiljen på 25 personer att gå samlat.","address":"Plats: El Mamsha Promenade","type":"city"},{"id":9,"dayName":"Lördag 4 juli","dateTag":"Dag 9","time":"Kl 20:00","title":"Hotellmys efter Båttur 2","desc":"Båttur på dagen (08-17). Skön och välförtjänt kväll på hotellet för att återhämta krafterna.","address":"Hotell: Pickalbatros Palace","type":"hotel"},{"id":10,"dayName":"Söndag 5 juli","dateTag":"Dag 10","time":"Kl 20:00","title":"Sheraton Road (Runda 2)","desc":"Dags för de sista inköpen, presenterna och den slutgiltiga prutningen där vi nu hittar bra.","address":"Plats: Sheraton Road","type":"city"},{"id":11,"dayName":"Måndag 6 juli","dateTag":"Dag 11","time":"Kl 20:00","title":"Boska & Bowling (Runda 2)","desc":"Repris på det vinnande konceptet där barnen bowlar och vuxna tar en kaffe på Boska.","address":"Plats: El Kawther","type":"city"},{"id":12,"dayName":"Tisdag 7 juli","dateTag":"Dag 12","time":"Kl 15:30","title":"Hästridning med Havsbad & King Grill","desc":"Eftm: Ridning barbacka i havet (för valda). Kl 20:00: Gemensam utgång till King Grill för alla.","address":"Stall: Lokalt stall (hämtar på hotellet) / King Grill","type":"special"},{"id":13,"dayName":"Onsdag 8 juli","dateTag":"Dag 13","time":"Kl 20:00","title":"Stor final på Granada Restaurant","desc":"Den stora avslutningskvällen! Stor lounge bokad på klipporna direkt över havet. Shisha & efterrätter.","address":"Restaurang: Granada, Old Sheraton Road","type":"special"},{"id":14,"dayName":"Torsdag 9 juli","dateTag":"Dag 14","time":"Kl 20:00","title":"Sista kvällen på hotellet","desc":"Packning i lugn och ro så att morgondagen blir stressfri. Stor samling i hotellträdgården för att runda av.","address":"Hotellområdet","type":"hotel"},{"id":15,"dayName":"Fredag 10 juli","dateTag":"Hemresa","time":"Kl 15:00","title":"Hemresa mot Sverige","desc":"Sista doppen i poolen på förmiddagen, lunch på hotellet. Transfern hämtar oss ca kl 15:00.","address":"Flygplats: Hurghada International Airport","type":"hotel"}];
+        // ==========================================
+
+        let isAdmin = false;
+        const grid = document.getElementById('grid');
+
+        function render() {
+            grid.innerHTML = '';
+            savedData.forEach((day, index) => {
+                const card = document.createElement('div');
+                card.className = `day-card ${day.type}`;
+                card.id = `card-${index}`;
+                
+                card.innerHTML = `
+                    <div class="day-header">
+                        <span class="editable-field" data-field="dayName" data-index="${index}" contenteditable="${isAdmin}">${day.dayName}</span>
+                        <span class="date-tag editable-field" data-field="dateTag" data-index="${index}" contenteditable="${isAdmin}">${day.dateTag}</span>
+                    </div>
+                    <div>
+                        <span class="time-badge editable-field" data-field="time" data-index="${index}" contenteditable="${isAdmin}">${day.time}</span>
+                    </div>
+                    <div class="title-field editable-field" data-field="title" data-index="${index}" contenteditable="${isAdmin}">${day.title}</div>
+                    <div class="desc-field editable-field" data-field="desc" data-index="${index}" contenteditable="${isAdmin}">${day.desc}</div>
+                    
+                    <select class="type-select" data-index="${index}" onchange="updateType(${index}, this.value)" style="display: ${isAdmin ? 'block' : 'none'}">
+                        <option value="city" ${day.type === 'city' ? 'selected' : ''}>Stad / Shopping (Orange)</option>
+                        <option value="special" ${day.type === 'special' ? 'selected' : ''}>Restaurang / Aktivitet (Grön)</option>
+                        <option value="boat" ${day.type === 'boat' ? 'selected' : ''}>Båttur (Blå)</option>
+                        <option value="hotel" ${day.type === 'hotel' ? 'selected' : ''}>Hotell (Grå)</option>
+                    </select>
+
+                    <div class="address-box">
+                        <span class="editable-field" data-field="address" data-index="${index}" contenteditable="${isAdmin}">${day.address}</span>
+                    </div>
+
+                    <div class="nav-buttons" style="display: ${isAdmin ? 'flex' : 'none'}">
+                        <button class="btn-nav" onclick="swapActivities(${index}, ${index - 1})">◀ Flytta upp/bakåt</button>
+                        <button class="btn-nav" onclick="swapActivities(${index}, ${index + 1})">Flytta ner/framåt ▶</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            // Lyssna på ändringar i textfälten under admin-läge
+            if (isAdmin) {
+                document.querySelectorAll('.editable-field').forEach(field => {
+                    field.addEventListener('blur', (e) => {
+                        const idx = e.target.dataset.index;
+                        const prop = e.target.dataset.field;
+                        savedData[idx][prop] = e.target.innerText;
+                    });
+                });
+            }
+        }
+
+        function toggleAdmin() {
+            isAdmin = !isAdmin;
+            document.getElementById('adminBox').style.display = isAdmin ? 'block' : 'none';
+            render();
+        }
+
+        function updateType(index, value) {
+            savedData[index].type = value;
+            render();
+        }
+
+        function swapActivities(idx1, idx2) {
+            if (idx1 < 0 || idx1 >= savedData.length || idx2 < 0 || idx2 >= savedData.length) return;
+            
+            // Vi byter bara ut innehållet (tid, titel, beskrivning, adress, typ) men behåller dagens namn och datum fasta.
+            const keysToSwap = ['time', 'title', 'desc', 'address', 'type'];
+            keysToSwap.forEach(key => {
+                const temp = savedData[idx1][key];
+                savedData[idx1][key] = savedData[idx2][key];
+                savedData[idx2][key] = temp;
+            });
+            render();
+        }
+
+        function exportData() {
+            // Generera den exakta textraden som användaren kan klistra in i sin kod
+            const jsonStr = JSON.stringify(savedData);
+            const outputText = `const savedData = ${jsonStr};`;
+            document.getElementById('exportOutput').value = outputText;
+            document.getElementById('exportOutput').select();
+            alert("Koden är genererad och markerad i textrutan nedan! Kopiera den och klistra in på GitHub.");
+        }
+
+        // Starta appen
+        render();
+    </script>
+</body>
+</html>
