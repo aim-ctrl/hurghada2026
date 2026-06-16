@@ -87,7 +87,7 @@
         .day-header .date-tag { font-size: 0.85rem; color: var(--text-muted); }
 
         .editable-field {
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             padding: 4px;
             border-radius: 4px;
         }
@@ -98,15 +98,31 @@
             outline: none;
         }
 
+        .meta-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
         .time-badge {
             background-color: #e0f2fe;
             color: #0369a1;
-            padding: 2px 6px;
+            padding: 3px 8px;
             border-radius: 4px;
             font-weight: bold;
             font-size: 0.85rem;
-            display: inline-block;
         }
+
+        .meet-badge {
+            background-color: #f1f5f9;
+            color: #334155;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            border: 1px solid #cbd5e1;
+        }
+        .meet-badge strong { color: #0f172a; }
 
         .title-field { font-weight: bold; margin-top: 5px; font-size: 1rem; }
         .desc-field { font-size: 0.9rem; color: var(--text-muted); margin-top: 5px; line-height: 1.4; }
@@ -116,9 +132,16 @@
             border: 1px solid #e2e8f0;
             padding: 8px;
             border-radius: 6px;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             margin-top: 10px;
             color: #475569;
+        }
+        .address-box a {
+            color: #0284c7;
+            text-decoration: underline;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 2px;
         }
 
         .nav-buttons {
@@ -163,22 +186,203 @@
     <!-- Adminverktyg -->
     <div class="admin-box" id="adminBox">
         <h3>Admin-läge aktivt</h3>
-        <p>1. Ändra tider, info eller adresser direkt i korten nedan.<br>
-           2. Använd pilarna för att flytta dagar.<br>
-           3. När du är klar: Klicka på den gröna knappen nedan för att ladda ner den nya filen. Ladda sedan upp den på GitHub!</p>
+        <p>1. Ändra tider, samlingsplatser eller info direkt i korten.<br>
+           2. För att ändra Uber-länken klickar du på texten i rutan längst ner.<br>
+           3. Klicka på knappen nedan för att spara och ladda ner din nya fil.</p>
         <button class="btn btn-save" onclick="downloadNewHTML()">💾 Ladda ner NY index.html-fil</button>
     </div>
 
     <div class="schedule-grid" id="grid"></div>
 
     <script>
-        const ADMIN_PASSWORD = "1234"; // Din adminkod
+        const ADMIN_PASSWORD = "3090";
 
-        // =========================================================================
-        // DATA-STRÄNGEN (DET ÄR DENNA SOM UPPDATERAS AUTOMATISKT I DEN NEDLADDADE FILEN)
-        // =========================================================================
-        let savedData = [{"id":1,"dayName":"Fredag 26 juni","dateTag":"Ankomst","time":"Valfri tid","title":"Ankomst & Landa","desc":"Incheckning, sen middag på hotellet och samling på rummen.","address":"Hotell: Pickalbatros Palace Aqua Park","type":"hotel"},{"id":2,"dayName":"Lördag 27 juni","dateTag":"Dag 2","time":"Kl 20:00","title":"Sheraton Road\nSAMLING: Receptionen","desc":"Stan, shopping, godaste mango/guava juice.","address":"Adress: Sheraton Road. GAD","type":"city"},{"id":3,"dayName":"Söndag 28 juni","dateTag":"Dag 3","time":"Kl 20:00","title":"Premiär i Nya Marinan","desc":"Gemensam promenad längs yachterna, glass och caféhäng i den vackra marinan.","address":"Adress: Hurghada Marina Boulevard","type":"city"},{"id":4,"dayName":"Måndag 29 juni","dateTag":"Dag 4","time":"Kl 20:00","title":"Boska & Bowling (Runda 1)","desc":"Båttur på dagen (08-17). Kl 20:00 åker vi till Boska Lounge. Bowling för barnen vägg i vägg.","address":"Café: Boska, El Kawther (Bowling Street)","type":"city"},{"id":5,"dayName":"Tisdag 30 juni","dateTag":"Dag 5","time":"Kl 20:00","title":"King Grill (Runda 1)","desc":"Shisha, te och storbildsskärm för vuxna. Stort, säkert lekområde med studsmatta för barnen.","address":"Restaurang: King Grill, El Mamsha","type":"special"},{"id":6,"dayName":"Onsdag 1 juli","dateTag":"Dag 6","time":"Kl 17:30","title":"El Gouna & Långbord på MerBey","desc":"Undantag: Ingen hotellmat ikväll! Avresa 17:30. Stor libanesisk meze-middag vid marinan. Måste förbokas!","address":"Restaurang: MerBey, Abu Tig Marina, El Gouna","type":"special"},{"id":7,"dayName":"Torsdag 2 juli","dateTag":"Dag 7","time":"Kl 20:00","title":"Senzo Mall & Shisha","desc":"Shopping med fasta priser bara 5 minuter bort. Skönt häng på caféerna utanför efteråt.","address":"Plats: Senzo Mall, Safaga Road","type":"city"},{"id":8,"dayName":"Fredag 3 juli","dateTag":"Dag 8","time":"Kl 20:00","title":"Kvällspromenad på El Mamsha","desc":"Bred, modern och helt bilfri gågata. Skönt för hela storfamiljen på 25 personer att gå samlat.","address":"Plats: El Mamsha Promenade","type":"city"},{"id":9,"dayName":"Lördag 4 juli","dateTag":"Dag 9","time":"Kl 20:00","title":"Hotellmys efter Båttur 2","desc":"Båttur på dagen (08-17). Skön och välförtjänt kväll på hotellet för att återhämta krafterna.","address":"Hotell: Pickalbatros Palace","type":"hotel"},{"id":10,"dayName":"Söndag 5 juli","dateTag":"Dag 10","time":"Kl 20:00","title":"Sheraton Road (Runda 2)","desc":"Dags för de sista inköpen, presenterna och den slutgiltiga prutningen där vi nu hittar bra.","address":"Plats: Sheraton Road","type":"city"},{"id":11,"dayName":"Måndag 6 juli","dateTag":"Dag 11","time":"Kl 20:00","title":"Boska & Bowling (Runda 2)","desc":"Repris på det vinnande konceptet där barnen bowlar och vuxna tar en kaffe på Boska.","address":"Plats: El Kawther","type":"city"},{"id":12,"dayName":"Tisdag 7 juli","dateTag":"Dag 12","time":"Kl 15:30","title":"Hästridning med Havsbad & King Grill","desc":"Eftm: Ridning barbacka i havet (för valda). Kl 20:00: Gemensam utgång till King Grill för alla.","address":"Stall: Lokalt stall (hämtar på hotellet) / King Grill","type":"special"},{"id":13,"dayName":"Onsdag 8 juli","dateTag":"Dag 13","time":"Kl 20:00","title":"Stor final på Granada Restaurant","desc":"Den stora avslutningskvällen! Stor lounge bokad på klipporna direkt över havet. Shisha & efterrätter.","address":"Restaurang: Granada, Old Sheraton Road","type":"special"},{"id":14,"dayName":"Torsdag 9 juli","dateTag":"Dag 14","time":"Kl 20:00","title":"Sista kvällen på hotellet","desc":"Packning i lugn och ro så att morgondagen blir stressfri. Stor samling i hotellträdgården för att runda av.","address":"Hotellområdet","type":"hotel"},{"id":15,"dayName":"Fredag 10 juli","dateTag":"Hemresa","time":"Kl 15:00","title":"Hemresa mot Sverige","desc":"Sista doppen i poolen på förmiddagen, lunch på hotellet. Transfern hämtar oss ca kl 15:00.","address":"Flygplats: Hurghada International Airport","type":"hotel"}];
-        // =========================================================================
+        // ==========================================
+        // STRUKTURERAD RESEDATA - LÄTT ATT EDITERA DIREKT
+        // ==========================================
+        let savedData = [
+            {
+                "id": 1,
+                "dayName": "Fredag 26 juni",
+                "dateTag": "Ankomst",
+                "time": "Valfri tid",
+                "meetingPlace": "Hotellområdet",
+                "title": "Ankomst & Landa",
+                "desc": "Incheckning, sen middag på hotellet och samling på rummen.",
+                "address": "Pickalbatros Palace Resort",
+                "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Pickalbatros%20Palace",
+                "type": "hotel"
+            },
+            {
+                "id": 2,
+                "dayName": "Lördag 27 juni",
+                "dateTag": "Dag 2",
+                "time": "Kl 20:00",
+                "meetingPlace": "Lobby",
+                "title": "Premiär i Nya Marinan",
+                "desc": "Gemensam promenad längs yachterna, glass och caféhäng i den vackra marinan.",
+                "address": "Hurghada Marina",
+                "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Hurghada%20Marina",
+                "type": "city"
+            },
+            {
+                "id": 3,
+                "dayName": "Söndag 28 juni",
+                "dateTag": "Dag 3",
+                "time": "Kl 20:00",
+                "meetingPlace": "Lobby",
+                "title": "Sheraton Road (Runda 1)",
+                "desc": "Stadspuls, basarer, intensiv shopping, souvenirer och färsk juice.",
+                "address": "Sheraton Road (Centrum)",
+                "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Sheraton%20Road",
+                "type": "city"
+            },
+            {
+                "id": 4,
+                "dayName": "Måndag 29 juni",
+                "dateTag": "Dag 4",
+                "time": "Kl 20:00",
+                "meetingPlace": "Lobby",
+                "title": "Boska & Bowling (Runda 1)",
+                "desc": "Båttur på dagen (08-17). Kl 20:00 åker vi till Boska Lounge. Bowling för barnen vägg i vägg.",
+                "address": "Boska Cafe (El Kawther)",
+                "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Boska%20Hurghada",
+                "type": "city"
+            },
+            {
+                "id": 5,
+                "dayName": "Tisdag 30 juni",
+                "dateTag": "Dag 5",
+                "time": "Kl 20:00",
+                "meetingPlace": "Lobby",
+                "title": "King Grill (Runda 1)",
+                "desc": "Shisha, te och storbildsskärm för vuxna. Stort, säkert lekområde med studsmatta för barnen.",
+                "address": "King Grill (El Mamsha)",
+                "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=King%20Grill%20Hurghada",
+                "type": "special"
+            },
+            {
+                "id": 6,
+                "dayName": "Onsdag 1 juli",
+                "dateTag": "Dag 6",
+                "time": "Kl 17:30",
+                "meetingPlace": "Lobby",
+                "title": "El Gouna & Långbord på MerBey",
+                "desc": "Undantag: Ingen hotellmat ikväll! Avresa 17:30. Stor libanesisk meze-middag vid marinan. Måste förbokas!",
+                "address": "MerBey (El Gouna Marina)",
+                "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=MerBey%20El%20Gouna",
+                "type": "special"
+            },
+            {
+                "id": 7,
+                "dayName": "Torsdag 2 juli",
+                "dateTag": "Dag 7",
+                "time": "Kl 20:00",
+                "meetingPlace": "Lobby",
+                "title": "Senzo Mall & Shisha",
+                "desc": "Shopping med fasta priser bara 5 minuter bort. Skönt häng på caféerna utanför efteråt.",
+                "address": "Senzo Mall",
+                "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Senzo%20Mall",
+                "type": "city"
+            },
+            {
+                "id": 8,
+                "dayName": "Fredag 3 juli",
+                "dateTag": "Dag 8",
+                "time": "Kl 20:00",
+                "meetingPlace": "Lobby",
+                "title": "Kvällspromenad på El Mamsha",
+                "desc": "Bred, modern och helt bilfri gågata. Skönt för hela storfamiljen på 25 personer att gå samlat.",
+                "address": "El Mamsha Promenade",
+                "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Esplanada%20Sphinx%20Mamsha",
+                "type": "city"
+            },
+            {
+                "id": 9,
+                "dayName": "Lördag 4 juli",
+                "dateTag": "Dag 9",
+                "time": "Kl 20:00",
+                "meetingPlace": "Hotellområdet",
+                "title": "Hotellmys efter Båttur 2",
+                "desc": "Båttur på dagen (08-17). Skön och välförtjänt kväll på hotellet för att återhämta krafterna.",
+                "address": "Pickalbatros Palace Resort",
+                "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Pickalbatros%20Palace",
+                "type": "hotel"
+            },
+            {
+                "id": 10,
+                "dayName": "Söndag 5 juli",
+                "dateTag": "Dag 10",
+                "time": "Kl 20:00",
+                "meetingPlace": "Lobby",
+                "title": "Sheraton Road (Runda 2)",
+                "desc": "Dags för de sista inköpen, presenterna och den slutgiltiga prutningen där vi nu hittar bra.",
+                "address": "Sheraton Road (Centrum)",
+                "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Sheraton%20Road",
+                "type": "city"
+            },
+            {
+                "id": 11,
+                "dayName": "Måndag 6 juli",
+                "dateTag": "Dag 11",
+                "time": "Kl 20:00",
+                "meetingPlace": "Lobby",
+                "title": "Boska & Bowling (Runda 2)",
+                "desc": "Repris på det vinnande konceptet där barnen bowlar och vuxna tar en kaffe på Boska.",
+                "address": "Boska Cafe (El Kawther)",
+                "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Boska%20Hurghada",
+                "type": "city"
+            },
+            {
+                "id": 12,
+                "dayName": "Tisdag 7 juli",
+                "dateTag": "Dag 12",
+                "time": "Kl 15:30",
+                "meetingPlace": "Lobby",
+                "title": "Hästridning med Havsbad & King Grill",
+                "desc": "Eftm: Ridning barbacka i havet (för valda). Kl 20:00: Gemensam utgång till King Grill för alla.",
+                "address": "King Grill (Samling kväll)",
+                "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=King%20Grill%20Hurghada",
+                "type": "special"
+            },
+            {
+                "id": 13,
+                "dayName": "Onsdag 8 juli",
+                "dateTag": "Dag 13",
+                "time": "Kl 20:00",
+                "meetingPlace": "Lobby",
+                "title": "Stor final på Granada Restaurant",
+                "desc": "Den stora avslutningskvällen! Stor lounge bokad på klipporna direkt över havet. Shisha & efterrätter.",
+                "address": "Granada Restaurant",
+                "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Granada%20Hurghada",
+                "type": "special"
+            },
+            {
+                "id": 14,
+                "dayName": "Torsdag 9 juli",
+                "dateTag": "Dag 14",
+                "time": "Kl 20:00",
+                "meetingPlace": "Hotellområdet",
+                "title": "Sista kvällen på hotellet",
+                "desc": "Packning i lugn och ro så att morgondagen blir stressfri. Stor samling i hotellträdgården för att runda av.",
+                "address": "Pickalbatros Palace",
+                "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Pickalbatros%20Palace",
+                "type": "hotel"
+            },
+            {
+                "id": 15,
+                "dayName": "Fredag 10 juli",
+                "dateTag": "Hemresa",
+                "time": "Kl 15:00",
+                "meetingPlace": "Flygplatsen",
+                "title": "Hemresa mot Sverige",
+                "desc": "Sista doppen i poolen på förmiddagen, lunch på hotellet. Transfern hämtar oss ca kl 15:00.",
+                "address": "Hurghada Airport (Terminal 1)",
+                "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Hurghada%20Airport",
+                "type": "hotel"
+            }
+        ];
+        // ==========================================
 
         let isAdmin = false;
         const grid = document.getElementById('grid');
@@ -189,13 +393,27 @@
                 const card = document.createElement('div');
                 card.className = `day-card ${day.type}`;
                 
+                let uberSection = '';
+                if (isAdmin) {
+                    uberSection = `
+                        <div>Mål: <span class="editable-field" data-field="address" data-index="${index}" contenteditable="true">${day.address}</span></div>
+                        <div>Uber-URL: <span class="editable-field" data-field="uberUrl" data-index="${index}" contenteditable="true" style="font-size:10px; word-break:break-all;">${day.uberUrl}</span></div>
+                    `;
+                } else {
+                    uberSection = `
+                        🚗 <strong>Destination:</strong> ${day.address}<br>
+                        <a href="${day.uberUrl}" target="_blank">👉 Öppna i Uber-appen</a>
+                    `;
+                }
+
                 card.innerHTML = `
                     <div class="day-header">
                         <span class="editable-field" data-field="dayName" data-index="${index}" contenteditable="${isAdmin}">${day.dayName}</span>
                         <span class="date-tag editable-field" data-field="dateTag" data-index="${index}" contenteditable="${isAdmin}">${day.dateTag}</span>
                     </div>
-                    <div>
+                    <div class="meta-row">
                         <span class="time-badge editable-field" data-field="time" data-index="${index}" contenteditable="${isAdmin}">${day.time}</span>
+                        <span class="meet-badge">Samling: <strong class="editable-field" data-field="meetingPlace" data-index="${index}" contenteditable="${isAdmin}">${day.meetingPlace}</strong></span>
                     </div>
                     <div class="title-field editable-field" data-field="title" data-index="${index}" contenteditable="${isAdmin}">${day.title}</div>
                     <div class="desc-field editable-field" data-field="desc" data-index="${index}" contenteditable="${isAdmin}">${day.desc}</div>
@@ -208,7 +426,7 @@
                     </select>
 
                     <div class="address-box">
-                        <span class="editable-field" data-field="address" data-index="${index}" contenteditable="${isAdmin}">${day.address}</span>
+                        ${uberSection}
                     </div>
 
                     <div class="nav-buttons" style="display: ${isAdmin ? 'flex' : 'none'}">
@@ -254,7 +472,7 @@
 
         function swapActivities(idx1, idx2) {
             if (idx1 < 0 || idx1 >= savedData.length || idx2 < 0 || idx2 >= savedData.length) return;
-            const keysToSwap = ['time', 'title', 'desc', 'address', 'type'];
+            const keysToSwap = ['time', 'meetingPlace', 'title', 'desc', 'address', 'uberUrl', 'type'];
             keysToSwap.forEach(key => {
                 const temp = savedData[idx1][key];
                 savedData[idx1][key] = savedData[idx2][key];
@@ -264,34 +482,28 @@
         }
 
         function downloadNewHTML() {
-            // Skapa en exakt kopia av källkoden för den här sidan
             let xhr = new XMLHttpRequest();
             xhr.open("GET", window.location.href, false);
             xhr.send();
             let rawCode = xhr.responseText;
 
-            // Om vi kör lokalt och inte kan hämta via XHR, bygger vi koden från dokumentet
             if (!rawCode) {
                 rawCode = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
             }
 
-            // Gör en snygg JSON-sträng av din nya uppdaterade data
-            const dataDataString = JSON.stringify(savedData);
-
-            // Ersätt datamatrisen i källkoden med den nya datan
-            const regex = /(let savedData = )\[.*?\](;)/;
+            // Formatera JSON med radbrytningar och indrag (4 mellanslag) för den nedladdade filen
+            const dataDataString = JSON.stringify(savedData, null, 4);
+            
+            // Anpassat regex för att matcha hela det utspridda savedData-blocket
+            const regex = /(let savedData = )\[[\s\S]*?\](;)/;
             let updatedCode = rawCode.replace(regex, `$1${dataDataString}$2`);
+            updatedCode = updatedCode.replace('display: block;', 'display: none;');
 
-            // Se till att admin-panelen är gömd i den exporterade filen
-            updatedCode = updatedCode.replace('display: none;', 'display: none;');
-
-            // Skapa en nedladdningsbar fil (Blob)
             const blob = new Blob([updatedCode], { type: "text/html;charset=utf-8" });
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
             link.download = "index.html";
             
-            // Trigga nedladdningen på telefonen/datorn
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
