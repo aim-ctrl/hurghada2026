@@ -1,730 +1,1007 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reseplanerare - Hurghada 2026</title>
-    <style>
-        :root {
-            --bg-color: #f4f7f6;
-            --card-bg: #ffffff;
-            --primary: #d97706;
-            --text-main: #1f2937;
-            --text-muted: #4b5563;
-            --accent-blue: #0284c7;
-            --accent-green: #059669;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hurghada 2026 – Aktivitetsplanering</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 15px;
-        }
+    :root {
+      --ground:   #0d2137;
+      --text:     #1a3040;
+      --text-dim: #7a9aaa;
+      --accent:   #d98d15;
+      --danger:   #bf3d1e;
+      --tbl-hdr:  #12304a;
+      --tbl-hdr2: #0a2238;
+      --row-a:    #e4d9c0;
+      --row-b:    #f3eddb;
+      --border:   rgba(0,0,0,0.09);
+      --gsep:     rgba(217,141,21,0.45);
+    }
 
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
-            color: white;
-            padding: 25px 15px;
-            border-radius: 12px;
-        }
-        header h1 { margin: 0 0 5px 0; font-size: 1.8rem; }
-        header p { margin: 0; opacity: 0.9; font-size: 1rem; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      background: var(--ground);
+      padding: 32px;
+      min-height: 100vh;
+    }
 
-        .admin-box {
-            background-color: #fef08a;
-            border: 2px dashed #ca8a04;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-        }
+    /* ── TOOLBAR ──────────────────────────────── */
+    .toolbar {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+    .eyebrow {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 5px;
+    }
+    .toolbar-left h1 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #f0e8d0;
+      letter-spacing: -0.3px;
+      margin-bottom: 5px;
+    }
+    .toolbar-left p { font-size: 11.5px; color: rgba(240,232,208,0.42); }
+    .toolbar-right  { display: flex; gap: 8px; align-items: center; }
 
-        .btn {
-            background-color: #1e3a8a;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-        .btn-admin { background-color: #4b5563; float: right; margin-top: -50px; }
-        .btn-save { background-color: #059669; width: 100%; padding: 14px; font-size: 1.1rem; border-radius: 8px; }
+    /* ── BUTTONS ──────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: none;
+      border-radius: 5px;
+      padding: 8px 15px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: filter 0.14s, transform 0.1s;
+      white-space: nowrap;
+      line-height: 1;
+    }
+    .btn:hover  { filter: brightness(0.88); }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary   { background: var(--accent); color: #fff; }
+    .btn-secondary {
+      background: rgba(255,255,255,0.1);
+      color: #e8dfc8;
+      border: 1px solid rgba(255,255,255,0.17);
+    }
+    .btn-secondary:hover { filter: brightness(1.25); }
+    .btn-copy {
+      background: rgba(217,141,21,0.18);
+      color: #d98d15;
+      border: 1px solid rgba(217,141,21,0.35);
+    }
+    .btn-copy:hover { filter: brightness(1.2); }
 
-        .schedule-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 15px;
-        }
+    /* ── TABLE CARD ───────────────────────────── */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 7px;
+      box-shadow: 0 6px 40px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.06);
+    }
+    table {
+      border-collapse: collapse;
+      font-size: 12px;
+      white-space: nowrap;
+      user-select: none;
+      width: 100%;
+    }
 
-        .day-card {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border: 1px solid #e5e7eb;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
+    /* ── TABLE HEADER ─────────────────────────── */
+    thead th {
+      background: var(--tbl-hdr);
+      color: #e4d9c0;
+      text-align: center;
+      padding: 8px 12px;
+      border: 1px solid rgba(255,255,255,0.09);
+      font-size: 11.5px;
+      font-weight: 700;
+    }
+    thead tr:nth-child(2) th {
+      background: var(--tbl-hdr2);
+      font-weight: 500;
+      font-size: 10.5px;
+      padding: 5px 10px;
+      color: rgba(228,217,192,0.62);
+    }
+    th.hdr-act  { text-align: left; padding-left: 12px; }
+    th.hdr-acts { width: 88px; background: var(--tbl-hdr) !important; }
+    th.gsep, td.gsep { border-left: 2px solid var(--gsep) !important; }
 
-        .day-card.card-hidden {
-            display: none; /* Dold för vanliga användare */
-        }
+    /* ── CELLS ────────────────────────────────── */
+    td.rank {
+      text-align: center;
+      font-weight: 800;
+      font-size: 13px;
+      width: 42px;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+    }
+    td.act-name {
+      padding: 6px 14px 6px 10px;
+      min-width: 210px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+    }
+    td.dcell {
+      text-align: center;
+      padding: 5px 10px;
+      border: 1px solid var(--border);
+    }
+    td.info-cell {
+      padding: 5px 12px;
+      min-width: 200px;
+      max-width: 280px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 11.5px;
+      color: #4a6a6a;
+    }
+    td.acts {
+      border: 1px solid var(--border);
+      text-align: center;
+      padding: 0 4px;
+      white-space: nowrap;
+    }
 
-        body.admin-mode .day-card.card-hidden {
-            display: flex !important;
-            opacity: 0.6;
-            border: 2px dashed #ef4444;
-            background-color: #fef2f2;
-        }
+    /* ── CHECKBOX CELL ────────────────────────── */
+    td.chk, th.chk {
+      width: 40px;
+      text-align: center;
+      padding: 0 6px;
+    }
+    th.chk {
+      border: 1px solid rgba(255,255,255,0.09);
+      font-size: 9.5px;
+      letter-spacing: 0.5px;
+      color: rgba(228,217,192,0.6);
+    }
+    td.chk { border: 1px solid var(--border); }
+    .confirm-cb {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      accent-color: var(--accent);
+      vertical-align: middle;
+    }
 
-        .day-header {
-            font-weight: bold;
-            color: #1e3a8a;
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-            border-bottom: 2px solid #f1f5f9;
-            padding-bottom: 5px;
-            display: flex;
-            justify-content: space-between;
-        }
+    /* ── ROW COLOURS ──────────────────────────── */
+    tr.row-odd  td { background: var(--row-a); color: var(--text); }
+    tr.row-even td { background: var(--row-b); color: var(--text); }
+    tr:not(.confirmed) td.act-name { color: #8a9a90; }
 
-        .day-header .date-tag { font-size: 0.85rem; color: var(--text-muted); }
+    /* ── ROW DRAG ─────────────────────────────── */
+    tr.data-row { cursor: grab; }
+    tr.data-row:active { cursor: grabbing; }
+    tr.dragging { opacity: 0.28; }
+    tr.drop-above td { border-top: 3px solid var(--accent) !important; }
+    tr.drop-below td { border-bottom: 3px solid var(--accent) !important; }
 
-        .editable-field {
-            margin-bottom: 4px;
-            padding: 4px;
-            border-radius: 4px;
-            display: inline-block;
-        }
+    .drag-handle {
+      display: inline-block;
+      margin-right: 8px;
+      color: rgba(0,0,0,0.22);
+      font-size: 11px;
+      letter-spacing: -1px;
+      vertical-align: middle;
+    }
 
-        [contenteditable="true"] {
-            background-color: #fffbeb !important;
-            border: 1px dashed #ca8a04;
-            outline: none;
-        }
+    /* ── ICON BUTTONS ─────────────────────────── */
+    .icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 4px;
+      color: inherit;
+      transition: background 0.13s;
+    }
+    .icon-btn.copy       { color: #8a6010; }
+    .icon-btn.copy:hover { background: rgba(138,96,16,0.14); }
+    .icon-btn.edit       { color: #1a5060; }
+    .icon-btn.edit:hover { background: rgba(26,80,96,0.14); }
+    .icon-btn.del        { color: #963030; }
+    .icon-btn.del:hover  { background: rgba(150,48,48,0.14); }
 
-        .meta-row {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 10px;
-        }
+    /* ── MODAL ────────────────────────────────── */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      padding: 16px;
+    }
+    .modal {
+      background: #fff;
+      border-radius: 8px;
+      width: 460px;
+      max-width: 100%;
+      box-shadow: 0 12px 50px rgba(0,0,0,0.45);
+      overflow: hidden;
+      animation: modal-in 0.17s ease;
+    }
+    @keyframes modal-in {
+      from { opacity: 0; transform: translateY(-10px) scale(0.97); }
+      to   { opacity: 1; transform: none; }
+    }
+    .modal-hdr {
+      background: var(--tbl-hdr);
+      color: #e4d9c0;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .modal-hdr .close-btn {
+      background: none;
+      border: none;
+      color: rgba(228,217,192,0.6);
+      font-size: 20px;
+      cursor: pointer;
+      padding: 0 2px;
+      border-radius: 3px;
+      transition: color 0.13s;
+    }
+    .modal-hdr .close-btn:hover { color: #e4d9c0; }
+    .modal-body { padding: 20px 20px 4px; }
+    .modal-ftr {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 14px 20px;
+      margin-top: 16px;
+      border-top: 1px solid #e4dbc8;
+      background: #f8f2e4;
+    }
 
-        .time-badge {
-            background-color: #e0f2fe;
-            color: #0369a1;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 0.85rem;
-        }
+    /* ── FORM ─────────────────────────────────── */
+    .fgrp { margin-bottom: 14px; }
+    .fgrp label {
+      display: block;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #4a6a72;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 5px;
+    }
+    .fgrp input[type="text"],
+    .fgrp select,
+    .fgrp textarea {
+      width: 100%;
+      border: 1.5px solid #c8d4d4;
+      border-radius: 5px;
+      padding: 7px 10px;
+      font-size: 13px;
+      color: var(--text);
+      background: #f8f4ec;
+      outline: none;
+      transition: border-color 0.14s, background 0.14s;
+      font-family: inherit;
+    }
+    .fgrp textarea { resize: vertical; min-height: 64px; }
+    .fgrp input:focus,
+    .fgrp select:focus,
+    .fgrp textarea:focus { border-color: var(--accent); background: #fff; }
+    .fgrp input.err      { border-color: var(--danger); }
+    .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
 
-        .meet-badge {
-            background-color: #f1f5f9;
-            color: #334155;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            border: 1px solid #cbd5e1;
-        }
+    .fgrp-check {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding: 10px 12px;
+      background: #f0ece0;
+      border-radius: 6px;
+      border: 1.5px solid #ddd4bc;
+    }
+    .fgrp-check input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .fgrp-check label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      text-transform: none;
+      letter-spacing: 0;
+      margin-bottom: 0;
+    }
 
-        .title-field { font-weight: bold; margin-top: 5px; font-size: 1rem; }
-        .desc-field { font-size: 0.9rem; color: var(--text-muted); margin-top: 5px; line-height: 1.4; }
-        
-        .address-box {
-            background-color: #f8fafc;
-            border: 1px solid #e2e8f0;
-            padding: 8px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            margin-top: 10px;
-            color: #475569;
-        }
-        .address-box a {
-            color: #0284c7;
-            text-decoration: underline;
-            font-weight: bold;
-            display: inline-block;
-            margin-top: 2px;
-        }
+    .modal-ftr .btn-secondary {
+      background: #e4dbc8; color: #4a6060; border: 1px solid #ccc4b0;
+    }
+    .modal-ftr .btn-secondary:hover { filter: brightness(0.93); }
+    .modal-ftr .btn-primary { background: var(--tbl-hdr); color: #e4d9c0; }
+    .modal-ftr .btn-primary:hover { filter: brightness(1.18); }
 
-        .admin-controls-card {
-            background-color: #f8fafc;
-            border: 1px solid #cbd5e1;
-            padding: 8px;
-            border-radius: 6px;
-            margin-top: 10px;
-            font-size: 0.8rem;
-        }
+    /* ── CARD MODAL ───────────────────────────── */
+    .card-modal {
+      background: #fff;
+      border-radius: 8px;
+      width: min(560px, 92vw);
+      max-height: 92vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 12px 50px rgba(0,0,0,0.55);
+      animation: modal-in 0.17s ease;
+    }
+    .card-preview-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      background: #111e2c;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .card-preview-body img {
+      max-width: 100%;
+      border-radius: 5px;
+      box-shadow: 0 6px 28px rgba(0,0,0,0.6);
+      display: block;
+    }
 
-        .field-toggles {
-            margin-top: 5px;
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            background: #edd;
-            padding: 4px;
-            border-radius: 4px;
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 5px;
-            margin-top: 8px;
-        }
-        .btn-nav {
-            flex: 1;
-            background-color: #e2e8f0;
-            border: none;
-            padding: 6px;
-            font-size: 0.75rem;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .btn-add-card {
-            background-color: #bbf7d0;
-            color: #166534;
-            width: 100%;
-            margin-top: 5px;
-        }
-        .btn-delete-card {
-            background-color: #fecaca;
-            color: #991b1b;
-        }
-
-        .type-select {
-            width: 100%;
-            margin-top: 5px;
-            font-size: 0.8rem;
-            padding: 3px;
-        }
-
-        .day-card.hotel { border-left: 6px solid #64748b; }
-        .day-card.city { border-left: 6px solid var(--primary); }
-        .day-card.boat { border-left: 6px solid var(--accent-blue); }
-        .day-card.special { border-left: 6px solid var(--accent-green); }
-    </style>
+    /* ── TOAST ────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--tbl-hdr);
+      color: #e4d9c0;
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 300;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none;
+      border-left: 3px solid var(--accent);
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+  </style>
 </head>
 <body>
 
-    <header>
-        <h1>Hurghada 2026 🌴</h1>
-        <p>Reseplanering • 24/6-10/7 • 25 Personer</p>
-    </header>
+<!-- Toolbar -->
+<div class="toolbar">
+  <div class="toolbar-left">
+    <div class="eyebrow">Hurghada 2026 &middot; Gruppresan</div>
+    <h1>Aktivitetsplanering</h1>
+    <p>Dra rader för att prioritera &mdash; bocka av för att markera som bekräftad</p>
+  </div>
+  <div class="toolbar-right">
+    <button class="btn btn-copy" onclick="copyPlan()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Kopiera reseplan
+    </button>
+    <button class="btn btn-primary" onclick="openModal(null)">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Lägg till aktivitet
+    </button>
+    <button class="btn btn-secondary" onclick="saveJSON()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Spara
+    </button>
+    <button class="btn btn-secondary" onclick="loadJSON()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      Ladda
+    </button>
+  </div>
+</div>
 
-    <button class="btn btn-admin" onclick="checkPassword()">🔑 Admin</button>
+<!-- Table -->
+<div class="table-wrap">
+  <table id="tbl">
+    <thead>
+      <tr>
+        <th rowspan="2" style="min-width:42px">#</th>
+        <th rowspan="2" class="chk">OK</th>
+        <th rowspan="2" class="hdr-act" style="min-width:210px">Aktivitet</th>
+        <th colspan="3">Tid</th>
+        <th rowspan="2" class="gsep" style="min-width:260px">Information</th>
+        <th rowspan="2" class="hdr-acts"></th>
+      </tr>
+      <tr>
+        <th style="min-width:110px">Dag</th>
+        <th style="min-width:80px">Starttid</th>
+        <th style="min-width:72px">Längd</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
 
-    <div class="admin-box" id="adminBox">
-        <h3>Admin-läge aktivt</h3>
-        <p>• Ändra <strong>all text, titlar och etiketter</strong> direkt i korten.<br>
-           • Använd ögat (👁️/🙈) för att visa/dölja kort. Bocka ur fält du vill gömma.<br>
-           • Använd pilarna för att kasta om eller lägg till nya kort mitt i schemat.</p>
-        <button class="btn btn-save" onclick="downloadNewHTML()">💾 Ladda ner NY index.html-fil</button>
+<!-- Modal -->
+<div id="overlay" class="overlay" style="display:none" onclick="onOverlayClick(event)">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-hdr">
+      <span id="modal-title">Lägg till aktivitet</span>
+      <button class="close-btn" onclick="closeModal()" title="Stäng">&times;</button>
     </div>
+    <div class="modal-body">
+      <div class="fgrp">
+        <label>Aktivitetsnamn</label>
+        <input type="text" id="f-name" placeholder="t.ex. Snorkling vid Giftun Island" autocomplete="off" />
+      </div>
+      <div class="form-row-3">
+        <div class="fgrp">
+          <label>Datum</label>
+          <input type="date" id="f-day" />
+        </div>
+        <div class="fgrp">
+          <label>Starttid</label>
+          <input type="text" id="f-starttime" placeholder="t.ex. 08:00" />
+        </div>
+        <div class="fgrp">
+          <label>Tidslängd</label>
+          <input type="text" id="f-duration" placeholder="t.ex. 2h" />
+        </div>
+      </div>
+      <div class="fgrp">
+        <label>Information</label>
+        <textarea id="f-info" rows="3" placeholder="Mötesplats, vad man ska ta med, praktiska detaljer..."></textarea>
+      </div>
+      <div class="fgrp-check">
+        <input type="checkbox" id="f-confirmed" />
+        <label for="f-confirmed">Bekräftad aktivitet</label>
+      </div>
+    </div>
+    <div class="modal-ftr">
+      <button class="btn btn-secondary" onclick="closeModal()">Avbryt</button>
+      <button class="btn btn-primary"   onclick="saveActivity()">Spara aktivitet</button>
+    </div>
+  </div>
+</div>
 
-    <div class="schedule-grid" id="grid"></div>
+<!-- Card preview modal -->
+<div id="card-overlay" class="overlay" style="display:none" onclick="onCardOverlayClick(event)">
+  <div class="card-modal">
+    <div class="modal-hdr">
+      <span id="card-modal-title">Aktivitetskort</span>
+      <button class="close-btn" onclick="closeCardModal()" title="Stäng">&times;</button>
+    </div>
+    <div class="card-preview-body">
+      <img id="card-img" src="" alt="Aktivitetskort" />
+    </div>
+    <div class="modal-ftr">
+      <button class="btn btn-secondary" onclick="closeCardModal()">Stäng</button>
+      <button class="btn btn-secondary" id="card-dl-btn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Ladda ner
+      </button>
+      <button class="btn btn-primary" id="card-copy-img-btn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Kopiera bild
+      </button>
+    </div>
+  </div>
+</div>
 
-    <script>
-        const ADMIN_PASSWORD = "3090";
+<!-- Toast -->
+<div id="toast" class="toast"></div>
 
-        // ==========================================
-        // STRUKTURERAD RESEDATA - LÄTT ATT EDITERA DIREKT
-        // ==========================================
-        let savedData = [
-    {
-        "id": 1781604593628,
-        "dayName": "Fredag 26 juni",
-        "dateTag": "Avresa från Berlin",
-        "time": "Kl 10:00",
-        "meetingPlace": "Lobby",
-        "title": "Utcheckning, frukost och avresa",
-        "desc": "Utcheckning senast 10:00. Frukost på Bascha sedan transport till flygplatsen. ",
-        "address": "Berlin Brandenburgs flygplats (BER)",
-        "uberUrl": "",
-        "type": "city",
-        "uberLabel": "",
-        "showTime": true,
-        "showMeeting": true,
-        "showDesc": true,
-        "showAddress": true,
-        "isHidden": false
-    },
-    {
-        "id": 1,
-        "dayName": "Fredag 26 juni",
-        "dateTag": "Ankomst Hurghada",
-        "time": "Valfri tid",
-        "meetingPlace": "Hotellområdet",
-        "title": "Ankomst & Landa",
-        "desc": "Incheckning, sen middag på hotellet och samling på rummen.",
-        "address": "Pickalbatros Palace Resort",
-        "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Pickalbatros%20Palace",
-        "type": "hotel",
-        "uberLabel": "👉 Öppna i Uber-appen",
-        "showTime": true,
-        "showMeeting": true,
-        "showDesc": true,
-        "showAddress": true,
-        "isHidden": false
-    },
-    {
-        "id": 2,
-        "dayName": "Lördag 27 juni",
-        "dateTag": "Dag 2",
-        "time": "Kl 20:00",
-        "meetingPlace": "Lobby",
-        "title": "Premiär i Nya Marinan",
-        "desc": "Gemensam promenad längs yachterna, glass och caféhäng i den vackra marinan.",
-        "address": "Hurghada Marina",
-        "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Hurghada%20Marina",
-        "type": "city",
-        "uberLabel": "👉 Öppna i Uber-appen",
-        "showTime": true,
-        "showMeeting": true,
-        "showDesc": true,
-        "showAddress": true,
-        "isHidden": false
-    },
-    {
-        "id": 3,
-        "dayName": "Söndag 28 juni",
-        "dateTag": "Dag 3",
-        "time": "Kl 20:00",
-        "meetingPlace": "Lobby",
-        "title": "Sheraton Road (Runda 1)",
-        "desc": "Stadspuls, basarer, intensiv shopping, souvenirer och färsk juice.",
-        "address": "Sheraton Road (Centrum)",
-        "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Sheraton%20Road",
-        "type": "city",
-        "uberLabel": "👉 Öppna i Uber-appen",
-        "showTime": true,
-        "showMeeting": true,
-        "showDesc": true,
-        "showAddress": true,
-        "isHidden": false
-    },
-    {
-        "id": 4,
-        "dayName": "Måndag 29 juni",
-        "dateTag": "Dag 4",
-        "time": "Kl 20:00",
-        "meetingPlace": "Lobby",
-        "title": "Boska & Bowling (Runda 1)",
-        "desc": "Båttur på dagen (08-17). Kl 20:00 åker vi till Boska Lounge. Bowling för barnen vägg i vägg.",
-        "address": "Boska Cafe (El Kawther)",
-        "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Boska%20Hurghada",
-        "type": "city",
-        "uberLabel": "👉 Öppna i Uber-appen",
-        "showTime": true,
-        "showMeeting": true,
-        "showDesc": true,
-        "showAddress": true,
-        "isHidden": false
-    },
-    {
-        "id": 5,
-        "dayName": "Tisdag 30 juni",
-        "dateTag": "Dag 5",
-        "time": "Kl 20:00",
-        "meetingPlace": "Lobby",
-        "title": "King Grill (Runda 1)",
-        "desc": "Shisha, te och storbildsskärm för vuxna. Stort, säkert lekområde med studsmatta för barnen.",
-        "address": "King Grill (El Mamsha)",
-        "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=King%20Grill%20Hurghada",
-        "type": "special",
-        "uberLabel": "👉 Öppna i Uber-appen",
-        "showTime": true,
-        "showMeeting": true,
-        "showDesc": true,
-        "showAddress": true,
-        "isHidden": false
-    },
-    {
-        "id": 6,
-        "dayName": "Onsdag 1 juli",
-        "dateTag": "Dag 6",
-        "time": "Kl 17:30",
-        "meetingPlace": "Lobby",
-        "title": "El Gouna & Långbord på MerBey",
-        "desc": "Undantag: Ingen hotellmat ikväll! Avresa 17:30. Stor libanesisk meze-middag vid marinan. Måste förbokas!",
-        "address": "MerBey (El Gouna Marina)",
-        "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=MerBey%20El%20Gouna",
-        "type": "special",
-        "uberLabel": "👉 Öppna i Uber-appen",
-        "showTime": true,
-        "showMeeting": true,
-        "showDesc": true,
-        "showAddress": true,
-        "isHidden": false
-    },
-    {
-        "id": 7,
-        "dayName": "Torsdag 2 juli",
-        "dateTag": "Dag 7",
-        "time": "Kl 20:00",
-        "meetingPlace": "Lobby",
-        "title": "Senzo Mall & Shisha",
-        "desc": "Shopping med fasta priser bara 5 minuter bort. Skönt häng på caféerna utanför efteråt.",
-        "address": "Senzo Mall",
-        "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Senzo%20Mall",
-        "type": "city",
-        "uberLabel": "👉 Öppna i Uber-appen",
-        "showTime": true,
-        "showMeeting": true,
-        "showDesc": true,
-        "showAddress": true,
-        "isHidden": false
-    },
-    {
-        "id": 8,
-        "dayName": "Fredag 3 juli",
-        "dateTag": "Dag 8",
-        "time": "Kl 20:00",
-        "meetingPlace": "Lobby",
-        "title": "Kvällspromenad på El Mamsha",
-        "desc": "Bred, modern och helt bilfri gågata. Skönt för hela storfamiljen på 25 personer att gå samlat.",
-        "address": "El Mamsha Promenade",
-        "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Esplanada%20Sphinx%20Mamsha",
-        "type": "city",
-        "uberLabel": "👉 Öppna i Uber-appen",
-        "showTime": true,
-        "showMeeting": true,
-        "showDesc": true,
-        "showAddress": true,
-        "isHidden": false
-    },
-    {
-        "id": 9,
-        "dayName": "Lördag 4 juli",
-        "dateTag": "Dag 9",
-        "time": "Kl 20:00",
-        "meetingPlace": "Hotellområdet",
-        "title": "Hotellmys efter Båttur 2",
-        "desc": "Båttur på dagen (08-17). Skön och välförtjänt kväll på hotellet för att återhämta krafterna.",
-        "address": "Pickalbatros Palace Resort",
-        "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Pickalbatros%20Palace",
-        "type": "hotel",
-        "uberLabel": "👉 Öppna i Uber-appen",
-        "showTime": true,
-        "showMeeting": true,
-        "showDesc": true,
-        "showAddress": true,
-        "isHidden": false
-    },
-    {
-        "id": 10,
-        "dayName": "Söndag 5 juli",
-        "dateTag": "Dag 10",
-        "time": "Kl 20:00",
-        "meetingPlace": "Lobby",
-        "title": "Sheraton Road (Runda 2)",
-        "desc": "Dags för de sista inköpen, presenterna och den slutgiltiga prutningen där vi nu hittar bra.",
-        "address": "Sheraton Road (Centrum)",
-        "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Sheraton%20Road",
-        "type": "city",
-        "uberLabel": "👉 Öppna i Uber-appen",
-        "showTime": true,
-        "showMeeting": true,
-        "showDesc": true,
-        "showAddress": true,
-        "isHidden": false
-    },
-    {
-        "id": 11,
-        "dayName": "Måndag 6 juli",
-        "dateTag": "Dag 11",
-        "time": "Kl 20:00",
-        "meetingPlace": "Lobby",
-        "title": "Boska & Bowling (Runda 2)",
-        "desc": "Repris på det vinnande konceptet där barnen bowlar och vuxna tar en kaffe på Boska.",
-        "address": "Boska Cafe (El Kawther)",
-        "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Boska%20Hurghada",
-        "type": "city",
-        "uberLabel": "👉 Öppna i Uber-appen",
-        "showTime": true,
-        "showMeeting": true,
-        "showDesc": true,
-        "showAddress": true,
-        "isHidden": false
-    },
-    {
-        "id": 12,
-        "dayName": "Tisdag 7 juli",
-        "dateTag": "Dag 12",
-        "time": "Kl 15:30",
-        "meetingPlace": "Lobby",
-        "title": "Hästridning med Havsbad & King Grill",
-        "desc": "Eftm: Ridning barbacka i havet (för valda). Kl 20:00: Gemensam utgång till King Grill för alla.",
-        "address": "King Grill (Samling kväll)",
-        "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=King%20Grill%20Hurghada",
-        "type": "special",
-        "uberLabel": "👉 Öppna i Uber-appen",
-        "showTime": true,
-        "showMeeting": true,
-        "showDesc": true,
-        "showAddress": true,
-        "isHidden": false
-    },
-    {
-        "id": 13,
-        "dayName": "Onsdag 8 juli",
-        "dateTag": "Dag 13",
-        "time": "Kl 20:00",
-        "meetingPlace": "Lobby",
-        "title": "Stor final på Granada Restaurant",
-        "desc": "Den stora avslutningskvällen! Stor lounge bokad på klipporna direkt över havet. Shisha & efterrätter.",
-        "address": "Granada Restaurant",
-        "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Granada%20Hurghada",
-        "type": "special",
-        "uberLabel": "👉 Öppna i Uber-appen",
-        "showTime": true,
-        "showMeeting": true,
-        "showDesc": true,
-        "showAddress": true,
-        "isHidden": false
-    },
-    {
-        "id": 14,
-        "dayName": "Torsdag 9 juli",
-        "dateTag": "Dag 14",
-        "time": "Kl 20:00",
-        "meetingPlace": "Hotellområdet",
-        "title": "Sista kvällen på hotellet",
-        "desc": "Packning i lugn och ro så att morgondagen blir stressfri. Stor samling i hotellträdgården för att runda av.",
-        "address": "Pickalbatros Palace",
-        "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Pickalbatros%20Palace",
-        "type": "hotel",
-        "uberLabel": "👉 Öppna i Uber-appen",
-        "showTime": true,
-        "showMeeting": true,
-        "showDesc": true,
-        "showAddress": true,
-        "isHidden": false
-    },
-    {
-        "id": 15,
-        "dayName": "Fredag 10 juli",
-        "dateTag": "Hemresa",
-        "time": "Kl 15:00",
-        "meetingPlace": "Flygplatsen",
-        "title": "Hemresa mot Sverige",
-        "desc": "Sista doppen i poolen på förmiddagen, lunch på hotellet. Transfern hämtar oss ca kl 15:00.",
-        "address": "Hurghada Airport (Terminal 1)",
-        "uberUrl": "https://m.uber.com/ul/?action=setPickup&dropoff[nickname]=Hurghada%20Airport",
-        "type": "hotel",
-        "uberLabel": "👉 Öppna i Uber-appen",
-        "showTime": true,
-        "showMeeting": true,
-        "showDesc": true,
-        "showAddress": true,
-        "isHidden": false
+<script>
+  // ── DATA ───────────────────────────────────────────────────────────────────
+  let ACTIVITIES = [];
+  let order      = [];
+  let nextId     = 1;
+  let editingId  = null;
+
+  let dragId = null;
+
+  const byId = id => ACTIVITIES.find(a => a.id === id);
+
+  const WEEKDAYS = ['Söndag','Måndag','Tisdag','Onsdag','Torsdag','Fredag','Lördag'];
+  const MONTHS   = ['jan','feb','mar','apr','maj','jun','jul','aug','sep','okt','nov','dec'];
+
+  function formatDay(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso + 'T12:00:00');
+    return `${WEEKDAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}`;
+  }
+
+  // ── RENDER ─────────────────────────────────────────────────────────────────
+  function render() {
+    const tbody = document.getElementById('tbody');
+    tbody.innerHTML = '';
+
+    order.forEach((id, idx) => {
+      const a   = byId(id);
+      const odd = idx % 2 === 0;
+
+      const tr = document.createElement('tr');
+      tr.className    = 'data-row ' + (odd ? 'row-odd' : 'row-even') + (a.confirmed ? ' confirmed' : '');
+      tr.dataset.id   = id;
+      tr.dataset.rank = idx + 1;
+      tr.draggable    = true;
+
+      tdEl(tr, 'rank', idx + 1);
+
+      // Confirmed checkbox
+      const tdChk = document.createElement('td');
+      tdChk.className = 'chk';
+      const cb = document.createElement('input');
+      cb.type      = 'checkbox';
+      cb.className = 'confirm-cb';
+      cb.checked   = !!a.confirmed;
+      cb.title     = a.confirmed ? 'Bekräftad' : 'Markera som bekräftad';
+      cb.addEventListener('change', () => {
+        a.confirmed = cb.checked;
+        tr.classList.toggle('confirmed', a.confirmed);
+        cb.title = a.confirmed ? 'Bekräftad' : 'Markera som bekräftad';
+      });
+      tdChk.appendChild(cb);
+      tr.appendChild(tdChk);
+
+      const tdn = document.createElement('td');
+      tdn.className = 'act-name';
+      tdn.innerHTML = `<span class="drag-handle">⠿⠿</span>${escHtml(a.name)}`;
+      tr.appendChild(tdn);
+
+      tdEl(tr, 'dcell', formatDay(a.day));
+      tdEl(tr, 'dcell', a.startTime || '—');
+      tdEl(tr, 'dcell', a.duration  || '—');
+
+      const tdInfo = document.createElement('td');
+      tdInfo.className   = 'info-cell gsep';
+      tdInfo.textContent = a.information || '';
+      if (a.information) tdInfo.title = a.information;
+      tr.appendChild(tdInfo);
+
+      const tda = document.createElement('td');
+      tda.className = 'acts';
+      tda.innerHTML = `
+        <button class="icon-btn copy" title="Skapa bildkort" onclick="generateCard(${id})">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="2" width="14" height="20" rx="2"/>
+            <line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="13" y2="15"/>
+          </svg>
+        </button>
+        <button class="icon-btn edit" title="Redigera" onclick="openModal(${id})">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+        </button>
+        <button class="icon-btn del" title="Ta bort" onclick="deleteActivity(${id})">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+          </svg>
+        </button>`;
+      tr.appendChild(tda);
+
+      attachDrag(tr);
+      tbody.appendChild(tr);
+    });
+  }
+
+  function tdEl(tr, cls, text) {
+    const el = document.createElement('td');
+    el.className = cls;
+    el.textContent = text;
+    tr.appendChild(el);
+    return el;
+  }
+
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ── ROW DRAG ───────────────────────────────────────────────────────────────
+  function attachDrag(tr) {
+    tr.addEventListener('dragstart', e => {
+      dragId = parseInt(tr.dataset.id);
+      requestAnimationFrame(() => tr.classList.add('dragging'));
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', String(dragId));
+    });
+    tr.addEventListener('dragend', () => {
+      tr.classList.remove('dragging');
+      clearMarkers();
+    });
+    tr.addEventListener('dragover', e => {
+      e.preventDefault();
+      const { top, height } = tr.getBoundingClientRect();
+      const above = e.clientY < top + height / 2;
+      clearMarkers();
+      if (parseInt(tr.dataset.id) === dragId) return;
+      tr.classList.add(above ? 'drop-above' : 'drop-below');
+    });
+    tr.addEventListener('dragleave', e => {
+      if (!tr.contains(e.relatedTarget)) clearMarkers();
+    });
+    tr.addEventListener('drop', e => {
+      e.preventDefault();
+      const targetId = parseInt(tr.dataset.id);
+      const { top, height } = tr.getBoundingClientRect();
+      const above = e.clientY < top + height / 2;
+      clearMarkers();
+      if (targetId === dragId) return;
+      const srcIdx = order.indexOf(dragId);
+      order.splice(srcIdx, 1);
+      const ti = order.indexOf(targetId);
+      order.splice(above ? ti : ti + 1, 0, dragId);
+      render();
+    });
+  }
+
+  function clearMarkers() {
+    document.querySelectorAll('.drop-above,.drop-below').forEach(el =>
+      el.classList.remove('drop-above', 'drop-below'));
+  }
+
+  // ── CRUD ───────────────────────────────────────────────────────────────────
+  function openModal(id) {
+    editingId = id;
+    document.getElementById('modal-title').textContent = id ? 'Redigera aktivitet' : 'Lägg till aktivitet';
+    const a = id ? byId(id) : null;
+    const nameEl = document.getElementById('f-name');
+    nameEl.value = a ? a.name : '';
+    nameEl.classList.remove('err');
+    document.getElementById('f-day').value        = a ? (a.day         || '') : '';
+    document.getElementById('f-starttime').value  = a ? (a.startTime   || '') : '';
+    document.getElementById('f-duration').value   = a ? (a.duration    || '') : '';
+    document.getElementById('f-info').value       = a ? (a.information || '') : '';
+    document.getElementById('f-confirmed').checked = a ? !!a.confirmed : false;
+    document.getElementById('overlay').style.display = 'flex';
+    setTimeout(() => nameEl.focus(), 60);
+  }
+
+  function closeModal() {
+    document.getElementById('overlay').style.display = 'none';
+    editingId = null;
+  }
+
+  function onOverlayClick(e) {
+    if (e.target === document.getElementById('overlay')) closeModal();
+  }
+
+  function saveActivity() {
+    const nameEl = document.getElementById('f-name');
+    const name   = nameEl.value.trim();
+    if (!name) { nameEl.classList.add('err'); nameEl.focus(); return; }
+    nameEl.classList.remove('err');
+
+    const fields = {
+      name,
+      day:         document.getElementById('f-day').value,
+      startTime:   document.getElementById('f-starttime').value.trim(),
+      duration:    document.getElementById('f-duration').value.trim(),
+      information: document.getElementById('f-info').value.trim(),
+      confirmed:   document.getElementById('f-confirmed').checked,
+    };
+
+    if (editingId) {
+      Object.assign(byId(editingId), fields);
+    } else {
+      const id = nextId++;
+      ACTIVITIES.push({ id, ...fields });
+      order.push(id);
     }
-];
-        // ==========================================
+    closeModal();
+    render();
+  }
 
-        let isAdmin = false;
-        const grid = document.getElementById('grid');
+  function deleteActivity(id) {
+    if (!confirm(`Ta bort "${byId(id).name}"?`)) return;
+    ACTIVITIES = ACTIVITIES.filter(a => a.id !== id);
+    order      = order.filter(i => i !== id);
+    render();
+  }
 
-        function render() {
-            grid.innerHTML = '';
-            savedData.forEach((day, index) => {
-                const card = document.createElement('div');
-                card.className = `day-card ${day.type} ${day.isHidden ? 'card-hidden' : ''}`;
-                
-                // Kontrollera synlighet för fält
-                const timeHtml = (day.showTime || isAdmin) ? `<span class="time-badge editable-field" data-field="time" data-index="${index}" contenteditable="${isAdmin}">${day.time}</span>` : '';
-                const meetHtml = (day.showMeeting || isAdmin) ? `<span class="meet-badge">Samling: <strong class="editable-field" data-field="meetingPlace" data-index="${index}" contenteditable="${isAdmin}">${day.meetingPlace}</strong></span>` : '';
-                const descHtml = (day.showDesc || isAdmin) ? `<div class="desc-field editable-field" data-field="desc" data-index="${index}" contenteditable="${isAdmin}">${day.desc}</div>` : '';
-                
-                let uberHtml = '';
-                if (day.showAddress || isAdmin) {
-                    if (isAdmin) {
-                        uberHtml = `
-                            <div class="address-box">
-                                <div>Mål: <span class="editable-field" data-field="address" data-index="${index}" contenteditable="true">${day.address}</span></div>
-                                <div>Knapptext: <span class="editable-field" data-field="uberLabel" data-index="${index}" contenteditable="true">${day.uberLabel || '👉 Öppna i Uber-appen'}</span></div>
-                                <div>Uber-URL: <span class="editable-field" data-field="uberUrl" data-index="${index}" contenteditable="true" style="font-size:10px; word-break:break-all;">${day.uberUrl}</span></div>
-                            </div>`;
-                    } else {
-                        uberHtml = `
-                            <div class="address-box">
-                                🚗 <strong>Destination:</strong> ${day.address}<br>
-                                <a href="${day.uberUrl}" target="_blank">${day.uberLabel || '👉 Öppna i Uber-appen'}</a>
-                            </div>`;
-                    }
-                }
+  // ── WHATSAPP FORMAT ────────────────────────────────────────────────────────
+  function daySort(d) {
+    if (!d) return Number.MAX_SAFE_INTEGER;
+    return new Date(d + 'T12:00:00').getTime();
+  }
 
-                // Administrationspanelen inuti själva kortet
-                const adminPanel = isAdmin ? `
-                    <div class="admin-controls-card">
-                        <div style="font-weight:bold; margin-bottom:5px;">⚙️ Inställningar för detta kort:</div>
-                        <button class="btn-nav" onclick="toggleVisibility(${index})" style="background-color: ${day.isHidden ? '#fca5a5' : '#cbd5e1'}">
-                            ${day.isHidden ? '🙈 Dold (Klicka för att visa)' : '👁️ Synlig (Klicka för att dölja)'}
-                        </button>
-                        <div class="field-toggles">
-                            <label><input type="checkbox" ${day.showTime ? 'checked' : ''} onchange="toggleField(${index}, 'showTime')"> Tid</label>
-                            <label><input type="checkbox" ${day.showMeeting ? 'checked' : ''} onchange="toggleField(${index}, 'showMeeting')"> Samling</label>
-                            <label><input type="checkbox" ${day.showDesc ? 'checked' : ''} onchange="toggleField(${index}, 'showDesc')"> Info</label>
-                            <label><input type="checkbox" ${day.showAddress ? 'checked' : ''} onchange="toggleField(${index}, 'showAddress')"> Uber/Mål</label>
-                        </div>
-                        <select class="type-select" onchange="updateType(${index}, this.value)">
-                            <option value="city" ${day.type === 'city' ? 'selected' : ''}>Stad / Shopping (Orange)</option>
-                            <option value="special" ${day.type === 'special' ? 'selected' : ''}>Aktivitet (Grön)</option>
-                            <option value="boat" ${day.type === 'boat' ? 'selected' : ''}>Båttur (Blå)</option>
-                            <option value="hotel" ${day.type === 'hotel' ? 'selected' : ''}>Hotell (Grå)</option>
-                        </select>
-                        <div class="nav-buttons">
-                            <button class="btn-nav" onclick="swapActivities(${index}, ${index - 1})">◀ Flytta bakåt</button>
-                            <button class="btn-nav" onclick="swapActivities(${index}, ${index + 1})">Flytta framåt ▶</button>
-                            <button class="btn-nav btn-delete-card" onclick="deleteCard(${index})">🗑️ Radera</button>
-                        </div>
-                    </div>
-                ` : '';
+  function formatForWhatsApp(a) {
+    const timeParts = [formatDay(a.day), a.startTime, a.duration].filter(s => s && s !== '—');
+    let text = `*${a.name}*`;
+    if (timeParts.length) text += `\n_${timeParts.join(' · ')}_`;
+    if (a.information)    text += `\n\n${a.information}`;
+    return text;
+  }
 
-                card.innerHTML = `
-                    <div class="day-header">
-                        <span class="editable-field" data-field="dayName" data-index="${index}" contenteditable="${isAdmin}">${day.dayName}</span>
-                        <span class="date-tag editable-field" data-field="dateTag" data-index="${index}" contenteditable="${isAdmin}">${day.dateTag}</span>
-                    </div>
-                    <div class="meta-row">
-                        ${timeHtml}
-                        ${meetHtml}
-                    </div>
-                    <div class="title-field editable-field" data-field="title" data-index="${index}" contenteditable="${isAdmin}">${day.title}</div>
-                    ${descHtml}
-                    ${uberHtml}
-                    ${adminPanel}
-                `;
+  async function copyPlan() {
+    const confirmed = order.map(id => byId(id)).filter(a => a.confirmed);
+    const wishlist  = order.map(id => byId(id)).filter(a => !a.confirmed);
 
-                grid.appendChild(card);
+    function formatSection(activities, label) {
+      if (!activities.length) return '';
+      const grouped = {};
+      [...activities]
+        .sort((a, b) => daySort(a.day) - daySort(b.day))
+        .forEach(a => {
+          const k = formatDay(a.day);
+          if (!grouped[k]) grouped[k] = [];
+          grouped[k].push(a);
+        });
+      let out = `*${label}*\n\n`;
+      for (const [day, acts] of Object.entries(grouped)) {
+        out += `*${day}*\n\n`;
+        acts.forEach(a => { out += formatForWhatsApp(a) + '\n\n'; });
+      }
+      return out;
+    }
 
-                // Skapa en "Lägg till kort"-knapp mellan korten om adminläge är på
-                if (isAdmin) {
-                    const addBtnContainer = document.createElement('div');
-                    addBtnContainer.style.gridColumn = '1 / -1';
-                    addBtnContainer.style.textAlign = 'center';
-                    addBtnContainer.innerHTML = `<button class="btn btn-nav btn-add-card" onclick="addCardAfter(${index})">➕ Lägg till nytt kort efter ${day.dayName}</button>`;
-                    grid.appendChild(addBtnContainer);
-                }
-            });
+    let text = '*HURGHADA 2026 – RESEPLAN*\n\n';
+    text += formatSection(confirmed, 'BEKRÄFTADE AKTIVITETER');
+    if (wishlist.length) text += formatSection(wishlist, 'ÖNSKEMÅL / RESERV');
 
-            if (isAdmin) {
-                document.querySelectorAll('.editable-field').forEach(field => {
-                    field.addEventListener('blur', (e) => {
-                        const idx = e.target.dataset.index;
-                        const prop = e.target.dataset.field;
-                        savedData[idx][prop] = e.target.innerText;
-                    });
-                });
-            }
-        }
+    try {
+      await navigator.clipboard.writeText(text.trimEnd());
+      showToast('Reseplan kopierad till urklipp');
+    } catch {
+      alert('Kunde inte komma åt urklipp.');
+    }
+  }
 
-        function checkPassword() {
-            if (isAdmin) {
-                isAdmin = false;
-                document.body.classList.remove('admin-mode');
-                document.getElementById('adminBox').style.display = 'none';
-                render();
-                return;
-            }
-            const input = prompt("Skriv in din administratörskod:");
-            if (input === ADMIN_PASSWORD) {
-                isAdmin = true;
-                document.body.classList.add('admin-mode');
-                document.getElementById('adminBox').style.display = 'block';
-                render();
-            } else if (input !== null) {
-                alert("Fel kod!");
-            }
-        }
+  // ── CARD GENERATOR ────────────────────────────────────────────────────────
+  function getWrappedLines(ctx, text, maxW) {
+    const words = text.split(' ');
+    const lines = [];
+    let line = '';
+    for (const w of words) {
+      const test = line ? line + ' ' + w : w;
+      if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = w; }
+      else line = test;
+    }
+    if (line) lines.push(line);
+    return lines;
+  }
 
-        function toggleVisibility(index) {
-            savedData[index].isHidden = !savedData[index].isHidden;
-            render();
-        }
+  function cardRoundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.arcTo(x + w, y, x + w, y + r, r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+    ctx.lineTo(x + r, y + h);
+    ctx.arcTo(x, y + h, x, y + h - r, r);
+    ctx.lineTo(x, y + r);
+    ctx.arcTo(x, y, x + r, y, r);
+    ctx.closePath();
+  }
 
-        function toggleField(index, fieldName) {
-            savedData[index][fieldName] = !savedData[index][fieldName];
-            render();
-        }
+  function generateCard(id) {
+    const a = byId(id);
+    const W = 900, H = 2000;
 
-        function updateType(index, value) {
-            savedData[index].type = value;
-            render();
-        }
+    const F_NAME = 'bold 60px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
+    const F_DATE = '600 32px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
+    const F_TIME = '400 24px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
+    const F_INFO = '400 18px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
+    const NAME_LH = 78, INFO_LH = 30, BP = 32;
 
-        function deleteCard(index) {
-            if(confirm("Är du säker på att du vill radera detta kort permanent?")) {
-                savedData.splice(index, 1);
-                render();
-            }
-        }
+    const tmp = document.createElement('canvas').getContext('2d');
+    tmp.font = F_NAME;
+    const nameLines = getWrappedLines(tmp, a.name, W - 180);
+    let infoLines = [];
+    if (a.information) {
+      tmp.font = F_INFO;
+      infoLines = getWrappedLines(tmp, a.information, W - 220);
+    }
 
-        function addCardAfter(index) {
-            const currentDay = savedData[index];
-            const newCard = {
-                "id": Date.now(),
-                "dayName": currentDay.dayName,
-                "dateTag": "Extra pass",
-                "time": "Kl 00:00",
-                "meetingPlace": "Lobby",
-                "title": "Ny aktivitet",
-                "desc": "Beskrivning av aktivitet här.",
-                "address": "Destination",
-                "uberUrl": "https://m.uber.com",
-                "type": "city",
-                "uberLabel": "👉 Öppna i Uber-appen",
-                "showTime": true,
-                "showMeeting": true,
-                "showDesc": true,
-                "showAddress": true,
-                "isHidden": false
-            };
-            savedData.splice(index + 1, 0, newCard);
-            render();
-        }
+    const nameH = nameLines.length * NAME_LH;
+    const dateH = a.day                          ? 62 : 0;
+    const timeH = (a.startTime || a.duration)    ? 50 : 0;
+    const infoH = infoLines.length               ? infoLines.length * INFO_LH + BP * 2 + 48 : 0;
+    const contentH = nameH + 56 + dateH + timeH + infoH;
 
-        function swapActivities(idx1, idx2) {
-            if (idx1 < 0 || idx1 >= savedData.length || idx2 < 0 || idx2 >= savedData.length) return;
-            const temp = savedData[idx1];
-            savedData[idx1] = savedData[idx2];
-            savedData[idx2] = temp;
-            render();
-        }
+    const zoneTop = 180, zoneBot = H - 180;
+    const cy0 = Math.max(zoneTop, Math.round((zoneTop + zoneBot) / 2 - contentH / 2));
 
-        function downloadNewHTML() {
-            let xhr = new XMLHttpRequest();
-            xhr.open("GET", window.location.href, false);
-            xhr.send();
-            let rawCode = xhr.responseText;
+    const canvas = document.createElement('canvas');
+    canvas.width = W; canvas.height = H;
+    const ctx = canvas.getContext('2d');
 
-            if (!rawCode) {
-                rawCode = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-            }
+    const bg = ctx.createLinearGradient(0, 0, W * 0.5, H);
+    bg.addColorStop(0, '#0c1f34');
+    bg.addColorStop(1, '#102d45');
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
 
-            const dataDataString = JSON.stringify(savedData, null, 4);
-            const regex = /(let savedData = )\[[\s\S]*?\](;)/;
-            let updatedCode = rawCode.replace(regex, `$1${dataDataString}$2`);
-            updatedCode = updatedCode.replace('display: none;', 'display: none;');
+    const glow = ctx.createRadialGradient(W / 2, cy0 + contentH / 2, 0, W / 2, cy0 + contentH / 2, W * 0.75);
+    glow.addColorStop(0, 'rgba(217,141,21,0.08)');
+    glow.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = glow; ctx.fillRect(0, 0, W, H);
 
-            const blob = new Blob([updatedCode], { type: "text/html;charset=utf-8" });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = "index.html";
-            
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
+    ctx.strokeStyle = 'rgba(255,255,255,0.02)'; ctx.lineWidth = 1;
+    for (let y = 0; y < H; y += 34) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
 
-        render();
-    </script>
+    ctx.fillStyle = '#d98d15'; ctx.fillRect(0, 0, W, 6);
+
+    ctx.fillStyle = 'rgba(217,141,21,0.8)';
+    ctx.font = '700 13px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('G R U P P R E S A N   ·   H U R G H A D A  2 0 2 6', W / 2, 60);
+
+    ctx.strokeStyle = 'rgba(217,141,21,0.3)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(90, 80); ctx.lineTo(W - 90, 80); ctx.stroke();
+
+    let cy = cy0;
+
+    ctx.fillStyle = '#f0e8d0'; ctx.font = F_NAME; ctx.textAlign = 'center';
+    nameLines.forEach((l, i) => ctx.fillText(l, W / 2, cy + i * NAME_LH));
+    cy += nameH + 24;
+
+    ctx.strokeStyle = 'rgba(217,141,21,0.85)'; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.moveTo(W / 2 - 52, cy); ctx.lineTo(W / 2 + 52, cy); ctx.stroke();
+    cy += 32;
+
+    if (a.day) {
+      ctx.fillStyle = '#e4d9c0'; ctx.font = F_DATE; ctx.textAlign = 'left';
+      ctx.fillText(formatDay(a.day), 100, cy);
+      cy += dateH;
+    }
+
+    if (a.startTime || a.duration) {
+      ctx.fillStyle = 'rgba(228,217,192,0.5)'; ctx.font = F_TIME; ctx.textAlign = 'left';
+      ctx.fillText([a.startTime, a.duration].filter(Boolean).join('   ·   '), 100, cy);
+      cy += timeH;
+    }
+
+    if (infoLines.length) {
+      cy += 48;
+      const bx = 80, bw = W - 160, bh = infoLines.length * INFO_LH + BP * 2;
+      cardRoundRect(ctx, bx, cy, bw, bh, 14);
+      ctx.fillStyle = 'rgba(255,255,255,0.052)'; ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.10)'; ctx.lineWidth = 1; ctx.stroke();
+      ctx.fillStyle = 'rgba(240,232,208,0.65)'; ctx.font = F_INFO; ctx.textAlign = 'left';
+      infoLines.forEach((l, i) => ctx.fillText(l, bx + BP, cy + BP + 16 + i * INFO_LH));
+    }
+
+    ctx.strokeStyle = 'rgba(217,141,21,0.3)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(90, H - 80); ctx.lineTo(W - 90, H - 80); ctx.stroke();
+
+    ctx.fillStyle = 'rgba(217,141,21,0.6)';
+    ctx.font = '700 13px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('H U R G H A D A  2 0 2 6', W / 2, H - 50);
+
+    ctx.fillStyle = '#d98d15'; ctx.fillRect(0, H - 6, W, 6);
+
+    showCardPreview(canvas, a.name);
+  }
+
+  let _cardCanvas = null;
+
+  function showCardPreview(canvas, name) {
+    _cardCanvas = canvas;
+    document.getElementById('card-modal-title').textContent = name;
+    document.getElementById('card-img').src = canvas.toDataURL('image/png');
+
+    document.getElementById('card-dl-btn').onclick = () => {
+      const link = document.createElement('a');
+      link.download = name.replace(/[^\w\sÅÄÖåäö]/g, '').trim().replace(/\s+/g, '-').toLowerCase() + '.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    };
+
+    document.getElementById('card-copy-img-btn').onclick = async () => {
+      try {
+        const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+        showToast('Bild kopierad till urklipp');
+      } catch {
+        showToast('Klicka "Ladda ner" och dela bilden');
+      }
+    };
+
+    document.getElementById('card-overlay').style.display = 'flex';
+  }
+
+  function closeCardModal() {
+    document.getElementById('card-overlay').style.display = 'none';
+    _cardCanvas = null;
+  }
+
+  function onCardOverlayClick(e) {
+    if (e.target === document.getElementById('card-overlay')) closeCardModal();
+  }
+
+  // ── TOAST ──────────────────────────────────────────────────────────────────
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  // ── SAVE / LOAD ────────────────────────────────────────────────────────────
+  async function saveJSON() {
+    const payload = { order, activities: ACTIVITIES };
+    try {
+      const handle = await window.showSaveFilePicker({
+        suggestedName: 'hurghada_aktiviteter.json',
+        types: [{ description: 'Aktiviteter JSON', accept: { 'application/json': ['.json'] } }]
+      });
+      const w = await handle.createWritable();
+      await w.write(JSON.stringify(payload, null, 2));
+      await w.close();
+      showToast('Sparat!');
+    } catch (err) {
+      if (err.name !== 'AbortError') alert('Kunde inte spara: ' + err.message);
+    }
+  }
+
+  async function loadJSON() {
+    try {
+      const [handle] = await window.showOpenFilePicker({
+        types: [{ description: 'Aktiviteter JSON', accept: { 'application/json': ['.json'] } }],
+        multiple: false
+      });
+      const data = JSON.parse(await (await handle.getFile()).text());
+      if (!Array.isArray(data.activities) || !Array.isArray(data.order)) throw new Error('Ogiltigt format');
+      ACTIVITIES = data.activities;
+      order      = data.order;
+      nextId     = Math.max(0, ...ACTIVITIES.map(a => a.id)) + 1;
+      render();
+    } catch (err) {
+      if (err.name !== 'AbortError') alert('Kunde inte ladda — ' + err.message);
+    }
+  }
+
+  // ── KEYBOARD ───────────────────────────────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    const open = document.getElementById('overlay').style.display === 'flex';
+    if (!open) return;
+    if (e.key === 'Escape') closeModal();
+    if (e.key === 'Enter' && !['BUTTON','TEXTAREA','SELECT'].includes(e.target.tagName)) {
+      e.preventDefault(); saveActivity();
+    }
+  });
+
+  // ── SAMPLE DATA ────────────────────────────────────────────────────────────
+  ACTIVITIES = [
+    { id: 1, name: 'Välkomstmiddag vid havet',    day: '2026-07-18', startTime: '19:00', duration: '3h',      information: 'Hotellets strandrestaurang. Ta med festkläder.',                                            confirmed: true  },
+    { id: 2, name: 'Snorkling vid Giftun Island', day: '2026-07-19', startTime: '08:00', duration: 'Halvdag', information: 'Hotellets brygga. Ta med badkläder, solskydd och handduk. Medhav mat och dryck för dagen.', confirmed: true  },
+    { id: 3, name: 'Glassbottenbåt',              day: '2026-07-19', startTime: '14:30', duration: '2h',      information: 'Gamla hamnen. Solglasögon och kamera rekommenderas.',                                       confirmed: true  },
+    { id: 4, name: 'Ökenjeep safari',             day: '2026-07-20', startTime: '14:30', duration: 'Halvdag', information: 'Samling vid hotellentré. Ta med långa byxor, solhatt och vatten.',                          confirmed: true  },
+    { id: 5, name: 'Dykning för nybörjare',       day: '2026-07-21', startTime: '08:30', duration: '3h',      information: 'Divingcentret vid hotellet. Obligatorisk säkerhetsgenomgång ingår.',                        confirmed: true  },
+    { id: 6, name: 'Parasailing',                 day: '2026-07-20', startTime: '11:00', duration: '1h',      information: 'Centralstranden. Badkläder medhav.',                                                        confirmed: false },
+    { id: 7, name: 'Kamelridning vid solnedgång', day: '2026-07-22', startTime: '17:00', duration: '2h',      information: 'Ökensafaribasen. Ta med långa byxor och robusta skor.',                                     confirmed: false },
+    { id: 8, name: 'Spa & hammam',                day: '2026-07-21', startTime: '10:00', duration: '2h',      information: 'Hotellets spaavdelning. Medhav bokningsbekräftelse.',                                       confirmed: false },
+    { id: 9, name: 'Quad bike i öknen',           day: '2026-07-22', startTime: '15:00', duration: '3h',      information: 'Ökensafaribasen. Ta med långa byxor, skor och solglasögon.',                                confirmed: false },
+  ];
+  order  = ACTIVITIES.map(a => a.id);
+  nextId = ACTIVITIES.length + 1;
+  render();
+</script>
 </body>
 </html>
