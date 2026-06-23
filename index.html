@@ -8,23 +8,20 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --ground:   #0d2137;
-      --text:     #1a3040;
-      --text-dim: #7a9aaa;
-      --accent:   #d98d15;
-      --danger:   #bf3d1e;
-      --tbl-hdr:  #12304a;
-      --tbl-hdr2: #0a2238;
-      --row-a:    #e4d9c0;
-      --row-b:    #f3eddb;
-      --border:   rgba(0,0,0,0.09);
-      --gsep:     rgba(217,141,21,0.45);
+      --ground:  #0d2137;
+      --text:    #1a3040;
+      --text-dim:#7a9aaa;
+      --accent:  #d98d15;
+      --danger:  #bf3d1e;
+      --tbl-hdr: #12304a;
+      --row-b:   #f3eddb;
+      --border:  rgba(0,0,0,0.09);
     }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
       background: var(--ground);
-      padding: 32px;
+      padding: 24px 20px 48px;
       min-height: 100vh;
     }
 
@@ -34,185 +31,142 @@
       align-items: flex-end;
       justify-content: space-between;
       gap: 16px;
-      margin-bottom: 22px;
+      margin-bottom: 24px;
       flex-wrap: wrap;
     }
     .eyebrow {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 2.5px;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 5px;
+      font-size: 10px; font-weight: 700; letter-spacing: 2.5px;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 5px;
     }
     .toolbar-left h1 {
-      font-size: 22px;
-      font-weight: 800;
-      color: #f0e8d0;
-      letter-spacing: -0.3px;
-      margin-bottom: 5px;
+      font-size: 22px; font-weight: 800; color: #f0e8d0;
+      letter-spacing: -0.3px; margin-bottom: 5px;
     }
     .toolbar-left p { font-size: 11.5px; color: rgba(240,232,208,0.42); }
-    .toolbar-right  { display: flex; gap: 8px; align-items: center; }
+    .toolbar-right  { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
     /* ── BUTTONS ──────────────────────────────── */
     .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      border: none;
-      border-radius: 5px;
-      padding: 8px 15px;
-      font-size: 12.5px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: filter 0.14s, transform 0.1s;
-      white-space: nowrap;
-      line-height: 1;
+      display: inline-flex; align-items: center; gap: 6px;
+      border: none; border-radius: 5px; padding: 8px 15px;
+      font-size: 12.5px; font-weight: 600; cursor: pointer;
+      transition: filter 0.14s, transform 0.1s; white-space: nowrap; line-height: 1;
     }
     .btn:hover  { filter: brightness(0.88); }
     .btn:active { transform: scale(0.97); }
-    .btn-primary   { background: var(--accent); color: #fff; }
+    .btn-primary  { background: var(--accent); color: #fff; }
     .btn-secondary {
-      background: rgba(255,255,255,0.1);
-      color: #e8dfc8;
+      background: rgba(255,255,255,0.1); color: #e8dfc8;
       border: 1px solid rgba(255,255,255,0.17);
     }
     .btn-secondary:hover { filter: brightness(1.25); }
     .btn-copy {
-      background: rgba(217,141,21,0.18);
-      color: #d98d15;
+      background: rgba(217,141,21,0.18); color: #d98d15;
       border: 1px solid rgba(217,141,21,0.35);
     }
     .btn-copy:hover { filter: brightness(1.2); }
+    .btn-sm { padding: 7px 13px; font-size: 12px; }
 
-    /* ── TABLE CARD ───────────────────────────── */
-    .table-wrap {
-      overflow-x: auto;
-      border-radius: 7px;
-      box-shadow: 0 6px 40px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.06);
-    }
-    table {
-      border-collapse: collapse;
-      font-size: 12px;
-      white-space: nowrap;
-      user-select: none;
-      width: 100%;
+    /* ── CARDS GRID ───────────────────────────── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 14px;
     }
 
-    /* ── TABLE HEADER ─────────────────────────── */
-    thead th {
-      background: var(--tbl-hdr);
-      color: #e4d9c0;
-      text-align: center;
-      padding: 8px 12px;
-      border: 1px solid rgba(255,255,255,0.09);
-      font-size: 11.5px;
-      font-weight: 700;
+    /* ── ACTIVITY CARD ────────────────────────── */
+    .act-card {
+      background: var(--row-b);
+      border-radius: 10px;
+      padding: 14px 16px;
+      box-shadow: 0 2px 14px rgba(0,0,0,0.22);
+      border: 1.5px solid rgba(0,0,0,0.06);
+      border-left: 4px solid rgba(0,0,0,0.10);
+      transition: opacity 0.15s;
     }
-    thead tr:nth-child(2) th {
-      background: var(--tbl-hdr2);
-      font-weight: 500;
-      font-size: 10.5px;
-      padding: 5px 10px;
-      color: rgba(228,217,192,0.62);
-    }
-    th.hdr-act  { text-align: left; padding-left: 12px; }
-    th.hdr-acts { width: 88px; background: var(--tbl-hdr) !important; }
-    th.gsep, td.gsep { border-left: 2px solid var(--gsep) !important; }
+    .act-card.confirmed   { border-left-color: var(--accent); }
+    .act-card:not(.confirmed) { opacity: 0.68; }
 
-    /* ── CELLS ────────────────────────────────── */
-    td.rank {
-      text-align: center;
-      font-weight: 800;
-      font-size: 13px;
-      width: 42px;
-      border: 1px solid var(--border);
-      color: var(--text-dim);
+    .card-top {
+      display: flex; justify-content: space-between;
+      align-items: center; margin-bottom: 10px; gap: 8px;
     }
-    td.act-name {
-      padding: 6px 14px 6px 10px;
-      min-width: 210px;
-      font-weight: 600;
-      border: 1px solid var(--border);
+    .card-confirm-label {
+      display: flex; align-items: center; gap: 6px; cursor: pointer;
+      font-size: 10.5px; font-weight: 700; color: var(--text-dim);
+      text-transform: uppercase; letter-spacing: 0.5px; user-select: none;
     }
-    td.dcell {
-      text-align: center;
-      padding: 5px 10px;
-      border: 1px solid var(--border);
+    .card-confirm-label input {
+      width: 18px; height: 18px; accent-color: var(--accent);
+      cursor: pointer; flex-shrink: 0;
     }
-    td.info-cell {
-      padding: 5px 12px;
-      min-width: 200px;
-      max-width: 280px;
-      border: 1px solid var(--border);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      font-size: 11.5px;
-      color: #4a6a6a;
+    .act-card.confirmed .card-confirm-label { color: #8a6010; }
+    .card-actions { display: flex; gap: 2px; flex-shrink: 0; }
+
+    .card-name {
+      font-size: 16px; font-weight: 700; color: var(--text);
+      line-height: 1.3; margin-bottom: 10px;
+      white-space: normal; word-break: break-word;
     }
-    td.acts {
-      border: 1px solid var(--border);
-      text-align: center;
-      padding: 0 4px;
-      white-space: nowrap;
+    .card-meta { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+    .meta-pill {
+      background: rgba(217,141,21,0.13); color: #7a5808;
+      border: 1px solid rgba(217,141,21,0.28); border-radius: 4px;
+      padding: 3px 9px; font-size: 11.5px; font-weight: 600; white-space: nowrap;
+    }
+    .card-info {
+      font-size: 12.5px; color: #3a5a5a;
+      line-height: 1.55; white-space: normal; word-break: break-word;
     }
 
-    /* ── CHECKBOX CELL ────────────────────────── */
-    td.chk, th.chk {
-      width: 40px;
-      text-align: center;
-      padding: 0 6px;
+    /* ── CARD EDIT MODE ───────────────────────── */
+    .act-card.editing {
+      background: #fff; border-left-color: var(--accent) !important;
+      box-shadow: 0 4px 28px rgba(0,0,0,0.28); opacity: 1 !important;
     }
-    th.chk {
-      border: 1px solid rgba(255,255,255,0.09);
-      font-size: 9.5px;
-      letter-spacing: 0.5px;
-      color: rgba(228,217,192,0.6);
+    .edit-lbl {
+      display: block; font-size: 10px; font-weight: 700; color: #4a6a72;
+      text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px;
     }
-    td.chk { border: 1px solid var(--border); }
-    .confirm-cb {
-      width: 16px;
-      height: 16px;
-      cursor: pointer;
-      accent-color: var(--accent);
-      vertical-align: middle;
+    .edit-field {
+      display: block; width: 100%; border: 1.5px solid #c8d4d4;
+      border-radius: 5px; padding: 8px 10px; font-size: 13px;
+      color: var(--text); background: #f8f4ec; margin-bottom: 10px;
+      font-family: inherit; outline: none;
+      transition: border-color 0.14s, background 0.14s;
     }
+    .edit-field:focus { border-color: var(--accent); background: #fff; }
+    .edit-field.edit-name { font-size: 15px; font-weight: 600; }
+    .edit-field.edit-info { resize: vertical; min-height: 72px; }
+    .edit-field.err { border-color: var(--danger); }
+    .edit-row-3 {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px;
+    }
+    .edit-row-3 .edit-field { margin-bottom: 0; }
+    .edit-confirm-row {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+      padding: 8px 10px; background: #f0ece0; border-radius: 6px;
+      border: 1.5px solid #ddd4bc;
+    }
+    .edit-confirm-row input { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
+    .edit-confirm-row label { font-size: 13px; font-weight: 600; color: var(--text); cursor: pointer; }
+    .card-edit-ftr { display: flex; justify-content: flex-end; gap: 8px; }
+    .card-edit-ftr .btn-secondary { background: #e4dbc8; color: #4a6060; border: 1px solid #ccc4b0; }
+    .card-edit-ftr .btn-secondary:hover { filter: brightness(0.93); }
+    .card-edit-ftr .btn-primary { background: var(--tbl-hdr); color: #e4d9c0; }
+    .card-edit-ftr .btn-primary:hover { filter: brightness(1.18); }
 
-    /* ── ROW COLOURS ──────────────────────────── */
-    tr.row-odd  td { background: var(--row-a); color: var(--text); }
-    tr.row-even td { background: var(--row-b); color: var(--text); }
-    tr:not(.confirmed) td.act-name { color: #8a9a90; }
-
-    /* ── ROW DRAG ─────────────────────────────── */
-    tr.data-row { cursor: grab; }
-    tr.data-row:active { cursor: grabbing; }
-    tr.dragging { opacity: 0.28; }
-    tr.drop-above td { border-top: 3px solid var(--accent) !important; }
-    tr.drop-below td { border-bottom: 3px solid var(--accent) !important; }
-
-    .drag-handle {
-      display: inline-block;
-      margin-right: 8px;
-      color: rgba(0,0,0,0.22);
-      font-size: 11px;
-      letter-spacing: -1px;
-      vertical-align: middle;
+    /* ── EMPTY STATE ──────────────────────────── */
+    .empty-state {
+      text-align: center; padding: 60px 20px;
+      color: rgba(240,232,208,0.28); font-size: 14px;
     }
 
     /* ── ICON BUTTONS ─────────────────────────── */
     .icon-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: none;
-      background: transparent;
-      cursor: pointer;
-      padding: 5px;
-      border-radius: 4px;
-      color: inherit;
-      transition: background 0.13s;
+      display: inline-flex; align-items: center; justify-content: center;
+      border: none; background: transparent; cursor: pointer;
+      padding: 6px; border-radius: 4px; color: inherit; transition: background 0.13s;
     }
     .icon-btn.copy       { color: #8a6010; }
     .icon-btn.copy:hover { background: rgba(138,96,16,0.14); }
@@ -223,22 +177,13 @@
 
     /* ── MODAL ────────────────────────────────── */
     .overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.55);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 200;
-      padding: 16px;
+      position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 200; padding: 16px;
     }
     .modal {
-      background: #fff;
-      border-radius: 8px;
-      width: 460px;
-      max-width: 100%;
-      box-shadow: 0 12px 50px rgba(0,0,0,0.45);
-      overflow: hidden;
+      background: #fff; border-radius: 8px; width: 460px; max-width: 100%;
+      box-shadow: 0 12px 50px rgba(0,0,0,0.45); overflow: hidden;
       animation: modal-in 0.17s ease;
     }
     @keyframes modal-in {
@@ -246,160 +191,91 @@
       to   { opacity: 1; transform: none; }
     }
     .modal-hdr {
-      background: var(--tbl-hdr);
-      color: #e4d9c0;
-      padding: 14px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 14px;
-      font-weight: 700;
+      background: var(--tbl-hdr); color: #e4d9c0; padding: 14px 18px;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 14px; font-weight: 700;
     }
     .modal-hdr .close-btn {
-      background: none;
-      border: none;
-      color: rgba(228,217,192,0.6);
-      font-size: 20px;
-      cursor: pointer;
-      padding: 0 2px;
-      border-radius: 3px;
-      transition: color 0.13s;
+      background: none; border: none; color: rgba(228,217,192,0.6);
+      font-size: 20px; cursor: pointer; padding: 0 2px;
+      border-radius: 3px; transition: color 0.13s;
     }
     .modal-hdr .close-btn:hover { color: #e4d9c0; }
     .modal-body { padding: 20px 20px 4px; }
     .modal-ftr {
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-      padding: 14px 20px;
-      margin-top: 16px;
-      border-top: 1px solid #e4dbc8;
-      background: #f8f2e4;
+      display: flex; justify-content: flex-end; gap: 8px;
+      padding: 14px 20px; margin-top: 16px;
+      border-top: 1px solid #e4dbc8; background: #f8f2e4;
     }
-
-    /* ── FORM ─────────────────────────────────── */
     .fgrp { margin-bottom: 14px; }
     .fgrp label {
-      display: block;
-      font-size: 10.5px;
-      font-weight: 700;
-      color: #4a6a72;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 5px;
+      display: block; font-size: 10.5px; font-weight: 700; color: #4a6a72;
+      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;
     }
     .fgrp input[type="text"],
-    .fgrp select,
+    .fgrp input[type="date"],
     .fgrp textarea {
-      width: 100%;
-      border: 1.5px solid #c8d4d4;
-      border-radius: 5px;
-      padding: 7px 10px;
-      font-size: 13px;
-      color: var(--text);
-      background: #f8f4ec;
-      outline: none;
-      transition: border-color 0.14s, background 0.14s;
-      font-family: inherit;
+      width: 100%; border: 1.5px solid #c8d4d4; border-radius: 5px;
+      padding: 7px 10px; font-size: 13px; color: var(--text);
+      background: #f8f4ec; outline: none;
+      transition: border-color 0.14s, background 0.14s; font-family: inherit;
     }
     .fgrp textarea { resize: vertical; min-height: 64px; }
-    .fgrp input:focus,
-    .fgrp select:focus,
-    .fgrp textarea:focus { border-color: var(--accent); background: #fff; }
-    .fgrp input.err      { border-color: var(--danger); }
+    .fgrp input:focus, .fgrp textarea:focus { border-color: var(--accent); background: #fff; }
+    .fgrp input.err { border-color: var(--danger); }
     .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-
     .fgrp-check {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 14px;
-      padding: 10px 12px;
-      background: #f0ece0;
-      border-radius: 6px;
-      border: 1.5px solid #ddd4bc;
+      display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+      padding: 10px 12px; background: #f0ece0;
+      border-radius: 6px; border: 1.5px solid #ddd4bc;
     }
     .fgrp-check input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--accent);
-      cursor: pointer;
-      flex-shrink: 0;
+      width: 18px; height: 18px; accent-color: var(--accent);
+      cursor: pointer; flex-shrink: 0;
     }
     .fgrp-check label {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text);
-      cursor: pointer;
-      text-transform: none;
-      letter-spacing: 0;
-      margin-bottom: 0;
+      font-size: 13px; font-weight: 600; color: var(--text);
+      cursor: pointer; text-transform: none; letter-spacing: 0; margin-bottom: 0;
     }
-
-    .modal-ftr .btn-secondary {
-      background: #e4dbc8; color: #4a6060; border: 1px solid #ccc4b0;
-    }
+    .modal-ftr .btn-secondary { background: #e4dbc8; color: #4a6060; border: 1px solid #ccc4b0; }
     .modal-ftr .btn-secondary:hover { filter: brightness(0.93); }
     .modal-ftr .btn-primary { background: var(--tbl-hdr); color: #e4d9c0; }
     .modal-ftr .btn-primary:hover { filter: brightness(1.18); }
 
-    /* ── CARD MODAL ───────────────────────────── */
+    /* ── CARD PREVIEW MODAL ───────────────────── */
     .card-modal {
-      background: #fff;
-      border-radius: 8px;
-      width: min(560px, 92vw);
-      max-height: 92vh;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 12px 50px rgba(0,0,0,0.55);
-      animation: modal-in 0.17s ease;
+      background: #fff; border-radius: 8px; width: min(560px, 92vw);
+      max-height: 92vh; overflow: hidden; display: flex; flex-direction: column;
+      box-shadow: 0 12px 50px rgba(0,0,0,0.55); animation: modal-in 0.17s ease;
     }
     .card-preview-body {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px;
-      background: #111e2c;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
+      flex: 1; overflow-y: auto; padding: 20px; background: #111e2c;
+      display: flex; justify-content: center; align-items: flex-start;
     }
     .card-preview-body img {
-      max-width: 100%;
-      border-radius: 5px;
-      box-shadow: 0 6px 28px rgba(0,0,0,0.6);
-      display: block;
+      max-width: 100%; border-radius: 5px;
+      box-shadow: 0 6px 28px rgba(0,0,0,0.6); display: block;
     }
 
     /* ── TOAST ────────────────────────────────── */
     .toast {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: var(--tbl-hdr);
-      color: #e4d9c0;
-      padding: 10px 18px;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 600;
-      z-index: 300;
-      opacity: 0;
-      transform: translateY(8px);
+      position: fixed; bottom: 24px; right: 24px; background: var(--tbl-hdr);
+      color: #e4d9c0; padding: 10px 18px; border-radius: 6px;
+      font-size: 13px; font-weight: 600; z-index: 300;
+      opacity: 0; transform: translateY(8px);
       transition: opacity 0.2s, transform 0.2s;
-      pointer-events: none;
-      border-left: 3px solid var(--accent);
+      pointer-events: none; border-left: 3px solid var(--accent);
     }
     .toast.show { opacity: 1; transform: translateY(0); }
   </style>
 </head>
 <body>
 
-<!-- Toolbar -->
 <div class="toolbar">
   <div class="toolbar-left">
     <div class="eyebrow">Hurghada 2026 &middot; Gruppresan</div>
     <h1>Aktivitetsplanering</h1>
-    <p>Dra rader för att prioritera &mdash; bocka av för att markera som bekräftad</p>
+    <p>Sorteras automatiskt på datum och tid &mdash; bocka av för att bekräfta</p>
   </div>
   <div class="toolbar-right">
     <button class="btn btn-copy" onclick="copyPlan()">
@@ -421,29 +297,10 @@
   </div>
 </div>
 
-<!-- Table -->
-<div class="table-wrap">
-  <table id="tbl">
-    <thead>
-      <tr>
-        <th rowspan="2" style="min-width:42px">#</th>
-        <th rowspan="2" class="chk">OK</th>
-        <th rowspan="2" class="hdr-act" style="min-width:210px">Aktivitet</th>
-        <th colspan="3">Tid</th>
-        <th rowspan="2" class="gsep" style="min-width:260px">Information</th>
-        <th rowspan="2" class="hdr-acts"></th>
-      </tr>
-      <tr>
-        <th style="min-width:110px">Dag</th>
-        <th style="min-width:80px">Starttid</th>
-        <th style="min-width:72px">Längd</th>
-      </tr>
-    </thead>
-    <tbody id="tbody"></tbody>
-  </table>
-</div>
+<div id="cards-grid" class="cards-grid"></div>
+<div id="empty-state" class="empty-state" style="display:none">Inga aktiviteter ännu — lägg till en!</div>
 
-<!-- Modal -->
+<!-- Add activity modal -->
 <div id="overlay" class="overlay" style="display:none" onclick="onOverlayClick(event)">
   <div class="modal" role="dialog" aria-modal="true">
     <div class="modal-hdr">
@@ -462,16 +319,16 @@
         </div>
         <div class="fgrp">
           <label>Starttid</label>
-          <input type="text" id="f-starttime" placeholder="t.ex. 08:00" />
+          <input type="text" id="f-starttime" placeholder="08:00" />
         </div>
         <div class="fgrp">
           <label>Tidslängd</label>
-          <input type="text" id="f-duration" placeholder="t.ex. 2h" />
+          <input type="text" id="f-duration" placeholder="2h" />
         </div>
       </div>
       <div class="fgrp">
         <label>Information</label>
-        <textarea id="f-info" rows="3" placeholder="Mötesplats, vad man ska ta med, praktiska detaljer..."></textarea>
+        <textarea id="f-info" rows="3" placeholder="Mötesplats, vad man ska ta med..."></textarea>
       </div>
       <div class="fgrp-check">
         <input type="checkbox" id="f-confirmed" />
@@ -480,12 +337,12 @@
     </div>
     <div class="modal-ftr">
       <button class="btn btn-secondary" onclick="closeModal()">Avbryt</button>
-      <button class="btn btn-primary"   onclick="saveActivity()">Spara aktivitet</button>
+      <button class="btn btn-primary" onclick="saveActivity()">Spara aktivitet</button>
     </div>
   </div>
 </div>
 
-<!-- Card preview modal -->
+<!-- Card preview modal (fallback when clipboard API fails) -->
 <div id="card-overlay" class="overlay" style="display:none" onclick="onCardOverlayClick(event)">
   <div class="card-modal">
     <div class="modal-hdr">
@@ -509,17 +366,13 @@
   </div>
 </div>
 
-<!-- Toast -->
 <div id="toast" class="toast"></div>
 
 <script>
-  // ── DATA ───────────────────────────────────────────────────────────────────
   let ACTIVITIES = [];
   let order      = [];
   let nextId     = 1;
   let editingId  = null;
-
-  let dragId = null;
 
   const byId = id => ACTIVITIES.find(a => a.id === id);
 
@@ -527,139 +380,147 @@
   const MONTHS   = ['jan','feb','mar','apr','maj','jun','jul','aug','sep','okt','nov','dec'];
 
   function formatDay(iso) {
-    if (!iso) return '—';
+    if (!iso) return null;
     const d = new Date(iso + 'T12:00:00');
     return `${WEEKDAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}`;
   }
 
-  // ── RENDER ─────────────────────────────────────────────────────────────────
-  function render() {
-    const tbody = document.getElementById('tbody');
-    tbody.innerHTML = '';
+  function parseTime(t) {
+    if (!t) return Infinity;
+    const m = t.match(/^(\d{1,2}):(\d{2})/);
+    return m ? parseInt(m[1]) * 60 + parseInt(m[2]) : Infinity;
+  }
 
-    order.forEach((id, idx) => {
-      const a   = byId(id);
-      const odd = idx % 2 === 0;
-
-      const tr = document.createElement('tr');
-      tr.className    = 'data-row ' + (odd ? 'row-odd' : 'row-even') + (a.confirmed ? ' confirmed' : '');
-      tr.dataset.id   = id;
-      tr.dataset.rank = idx + 1;
-      tr.draggable    = true;
-
-      tdEl(tr, 'rank', idx + 1);
-
-      // Confirmed checkbox
-      const tdChk = document.createElement('td');
-      tdChk.className = 'chk';
-      const cb = document.createElement('input');
-      cb.type      = 'checkbox';
-      cb.className = 'confirm-cb';
-      cb.checked   = !!a.confirmed;
-      cb.title     = a.confirmed ? 'Bekräftad' : 'Markera som bekräftad';
-      cb.addEventListener('change', () => {
-        a.confirmed = cb.checked;
-        tr.classList.toggle('confirmed', a.confirmed);
-        cb.title = a.confirmed ? 'Bekräftad' : 'Markera som bekräftad';
-      });
-      tdChk.appendChild(cb);
-      tr.appendChild(tdChk);
-
-      const tdn = document.createElement('td');
-      tdn.className = 'act-name';
-      tdn.innerHTML = `<span class="drag-handle">⠿⠿</span>${escHtml(a.name)}`;
-      tr.appendChild(tdn);
-
-      tdEl(tr, 'dcell', formatDay(a.day));
-      tdEl(tr, 'dcell', a.startTime || '—');
-      tdEl(tr, 'dcell', a.duration  || '—');
-
-      const tdInfo = document.createElement('td');
-      tdInfo.className   = 'info-cell gsep';
-      tdInfo.textContent = a.information || '';
-      if (a.information) tdInfo.title = a.information;
-      tr.appendChild(tdInfo);
-
-      const tda = document.createElement('td');
-      tda.className = 'acts';
-      tda.innerHTML = `
-        <button class="icon-btn copy" title="Skapa bildkort" onclick="generateCard(${id})">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="5" y="2" width="14" height="20" rx="2"/>
-            <line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="13" y2="15"/>
-          </svg>
-        </button>
-        <button class="icon-btn edit" title="Redigera" onclick="openModal(${id})">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-          </svg>
-        </button>
-        <button class="icon-btn del" title="Ta bort" onclick="deleteActivity(${id})">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
-          </svg>
-        </button>`;
-      tr.appendChild(tda);
-
-      attachDrag(tr);
-      tbody.appendChild(tr);
+  function sortOrder() {
+    order.sort((idA, idB) => {
+      const a = byId(idA), b = byId(idB);
+      const da = a.day ? new Date(a.day + 'T12:00:00').getTime() : Infinity;
+      const db = b.day ? new Date(b.day + 'T12:00:00').getTime() : Infinity;
+      if (da !== db) return da - db;
+      return parseTime(a.startTime) - parseTime(b.startTime);
     });
   }
 
-  function tdEl(tr, cls, text) {
-    const el = document.createElement('td');
-    el.className = cls;
-    el.textContent = text;
-    tr.appendChild(el);
-    return el;
+  // ── RENDER ─────────────────────────────────────────────────────────────────
+  function render() {
+    sortOrder();
+    const grid  = document.getElementById('cards-grid');
+    const empty = document.getElementById('empty-state');
+    grid.innerHTML = '';
+    if (order.length === 0) { empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+    order.forEach(id => grid.appendChild(buildCard(id)));
+  }
+
+  function buildCard(id) {
+    const a = byId(id);
+    const card = document.createElement('div');
+    card.className = 'act-card' + (a.confirmed ? ' confirmed' : '');
+    card.dataset.id = id;
+
+    const dayStr = formatDay(a.day);
+    const pills  = [dayStr, a.startTime || null, a.duration || null]
+      .filter(Boolean)
+      .map(s => `<span class="meta-pill">${escHtml(s)}</span>`)
+      .join('');
+
+    card.innerHTML = `
+      <div class="card-top">
+        <label class="card-confirm-label">
+          <input type="checkbox" ${a.confirmed ? 'checked' : ''} onchange="toggleConfirmed(${id}, this.checked)" />
+          <span>${a.confirmed ? 'Bekräftad' : 'Önskemål'}</span>
+        </label>
+        <div class="card-actions">
+          <button class="icon-btn copy" title="Kopiera bildkort" onclick="generateCard(${id})">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="2" width="14" height="20" rx="2"/>
+              <line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="13" y2="15"/>
+            </svg>
+          </button>
+          <button class="icon-btn edit" title="Redigera" onclick="startEdit(${id})">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+          </button>
+          <button class="icon-btn del" title="Ta bort" onclick="deleteActivity(${id})">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="card-name">${escHtml(a.name)}</div>
+      ${pills ? `<div class="card-meta">${pills}</div>` : ''}
+      ${a.information ? `<div class="card-info">${escHtml(a.information)}</div>` : ''}`;
+    return card;
   }
 
   function escHtml(s) {
-    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function escAttr(s) {
+    return escHtml(s).replace(/'/g,'&#39;');
   }
 
-  // ── ROW DRAG ───────────────────────────────────────────────────────────────
-  function attachDrag(tr) {
-    tr.addEventListener('dragstart', e => {
-      dragId = parseInt(tr.dataset.id);
-      requestAnimationFrame(() => tr.classList.add('dragging'));
-      e.dataTransfer.effectAllowed = 'move';
-      e.dataTransfer.setData('text/plain', String(dragId));
-    });
-    tr.addEventListener('dragend', () => {
-      tr.classList.remove('dragging');
-      clearMarkers();
-    });
-    tr.addEventListener('dragover', e => {
-      e.preventDefault();
-      const { top, height } = tr.getBoundingClientRect();
-      const above = e.clientY < top + height / 2;
-      clearMarkers();
-      if (parseInt(tr.dataset.id) === dragId) return;
-      tr.classList.add(above ? 'drop-above' : 'drop-below');
-    });
-    tr.addEventListener('dragleave', e => {
-      if (!tr.contains(e.relatedTarget)) clearMarkers();
-    });
-    tr.addEventListener('drop', e => {
-      e.preventDefault();
-      const targetId = parseInt(tr.dataset.id);
-      const { top, height } = tr.getBoundingClientRect();
-      const above = e.clientY < top + height / 2;
-      clearMarkers();
-      if (targetId === dragId) return;
-      const srcIdx = order.indexOf(dragId);
-      order.splice(srcIdx, 1);
-      const ti = order.indexOf(targetId);
-      order.splice(above ? ti : ti + 1, 0, dragId);
-      render();
-    });
+  // ── TOGGLE CONFIRMED ───────────────────────────────────────────────────────
+  function toggleConfirmed(id, checked) {
+    byId(id).confirmed = checked;
+    const card = document.querySelector(`.act-card[data-id="${id}"]`);
+    if (!card || card.classList.contains('editing')) return;
+    card.classList.toggle('confirmed', checked);
+    const span = card.querySelector('.card-confirm-label span');
+    if (span) span.textContent = checked ? 'Bekräftad' : 'Önskemål';
   }
 
-  function clearMarkers() {
-    document.querySelectorAll('.drop-above,.drop-below').forEach(el =>
-      el.classList.remove('drop-above', 'drop-below'));
+  // ── INLINE EDIT ────────────────────────────────────────────────────────────
+  function startEdit(id) {
+    document.querySelectorAll('.act-card.editing').forEach(c => {
+      if (parseInt(c.dataset.id) !== id) cancelEdit(parseInt(c.dataset.id));
+    });
+    const a = byId(id);
+    const card = document.querySelector(`.act-card[data-id="${id}"]`);
+    card.classList.add('editing', 'confirmed');
+
+    card.innerHTML = `
+      <span class="edit-lbl">Aktivitetsnamn</span>
+      <input class="edit-field edit-name" id="ec-name-${id}" value="${escAttr(a.name)}" placeholder="Aktivitetsnamn" />
+      <div class="edit-row-3">
+        <div><span class="edit-lbl">Datum</span><input type="date" class="edit-field" id="ec-day-${id}" value="${escAttr(a.day||'')}" /></div>
+        <div><span class="edit-lbl">Starttid</span><input class="edit-field" id="ec-time-${id}" value="${escAttr(a.startTime||'')}" placeholder="08:00" /></div>
+        <div><span class="edit-lbl">Längd</span><input class="edit-field" id="ec-dur-${id}" value="${escAttr(a.duration||'')}" placeholder="2h" /></div>
+      </div>
+      <span class="edit-lbl">Information</span>
+      <textarea class="edit-field edit-info" id="ec-info-${id}" placeholder="Mötesplats, vad man ska ta med...">${escHtml(a.information||'')}</textarea>
+      <div class="edit-confirm-row">
+        <input type="checkbox" id="ec-conf-${id}" ${a.confirmed ? 'checked' : ''} />
+        <label for="ec-conf-${id}">Bekräftad aktivitet</label>
+      </div>
+      <div class="card-edit-ftr">
+        <button class="btn btn-secondary btn-sm" onclick="cancelEdit(${id})">Avbryt</button>
+        <button class="btn btn-primary btn-sm" onclick="saveEdit(${id})">Spara</button>
+      </div>`;
+    document.getElementById(`ec-name-${id}`).focus();
+  }
+
+  function saveEdit(id) {
+    const nameEl = document.getElementById(`ec-name-${id}`);
+    const name   = nameEl.value.trim();
+    if (!name) { nameEl.classList.add('err'); nameEl.focus(); return; }
+    const a = byId(id);
+    a.name        = name;
+    a.day         = document.getElementById(`ec-day-${id}`).value;
+    a.startTime   = document.getElementById(`ec-time-${id}`).value.trim();
+    a.duration    = document.getElementById(`ec-dur-${id}`).value.trim();
+    a.information = document.getElementById(`ec-info-${id}`).value.trim();
+    a.confirmed   = document.getElementById(`ec-conf-${id}`).checked;
+    render();
+  }
+
+  function cancelEdit(id) {
+    const card = document.querySelector(`.act-card[data-id="${id}"]`);
+    if (!card) return;
+    card.replaceWith(buildCard(id));
   }
 
   // ── CRUD ───────────────────────────────────────────────────────────────────
@@ -670,9 +531,9 @@
     const nameEl = document.getElementById('f-name');
     nameEl.value = a ? a.name : '';
     nameEl.classList.remove('err');
-    document.getElementById('f-day').value        = a ? (a.day         || '') : '';
-    document.getElementById('f-starttime').value  = a ? (a.startTime   || '') : '';
-    document.getElementById('f-duration').value   = a ? (a.duration    || '') : '';
+    document.getElementById('f-day').value        = a ? (a.day       || '') : '';
+    document.getElementById('f-starttime').value  = a ? (a.startTime || '') : '';
+    document.getElementById('f-duration').value   = a ? (a.duration  || '') : '';
     document.getElementById('f-info').value       = a ? (a.information || '') : '';
     document.getElementById('f-confirmed').checked = a ? !!a.confirmed : false;
     document.getElementById('overlay').style.display = 'flex';
@@ -693,7 +554,6 @@
     const name   = nameEl.value.trim();
     if (!name) { nameEl.classList.add('err'); nameEl.focus(); return; }
     nameEl.classList.remove('err');
-
     const fields = {
       name,
       day:         document.getElementById('f-day').value,
@@ -702,7 +562,6 @@
       information: document.getElementById('f-info').value.trim(),
       confirmed:   document.getElementById('f-confirmed').checked,
     };
-
     if (editingId) {
       Object.assign(byId(editingId), fields);
     } else {
@@ -723,15 +582,14 @@
 
   // ── WHATSAPP FORMAT ────────────────────────────────────────────────────────
   function daySort(d) {
-    if (!d) return Number.MAX_SAFE_INTEGER;
-    return new Date(d + 'T12:00:00').getTime();
+    return d ? new Date(d + 'T12:00:00').getTime() : Number.MAX_SAFE_INTEGER;
   }
 
   function formatForWhatsApp(a) {
-    const timeParts = [formatDay(a.day), a.startTime, a.duration].filter(s => s && s !== '—');
+    const parts = [formatDay(a.day), a.startTime || null, a.duration || null].filter(Boolean);
     let text = `*${a.name}*`;
-    if (timeParts.length) text += `\n_${timeParts.join(' · ')}_`;
-    if (a.information)    text += `\n\n${a.information}`;
+    if (parts.length) text += `\n_${parts.join(' · ')}_`;
+    if (a.information) text += `\n\n${a.information}`;
     return text;
   }
 
@@ -739,16 +597,13 @@
     const confirmed = order.map(id => byId(id)).filter(a => a.confirmed);
     const wishlist  = order.map(id => byId(id)).filter(a => !a.confirmed);
 
-    function formatSection(activities, label) {
-      if (!activities.length) return '';
+    function section(list, label) {
+      if (!list.length) return '';
       const grouped = {};
-      [...activities]
-        .sort((a, b) => daySort(a.day) - daySort(b.day))
-        .forEach(a => {
-          const k = formatDay(a.day);
-          if (!grouped[k]) grouped[k] = [];
-          grouped[k].push(a);
-        });
+      [...list].sort((a, b) => daySort(a.day) - daySort(b.day)).forEach(a => {
+        const k = formatDay(a.day) || '—';
+        (grouped[k] = grouped[k] || []).push(a);
+      });
       let out = `*${label}*\n\n`;
       for (const [day, acts] of Object.entries(grouped)) {
         out += `*${day}*\n\n`;
@@ -758,22 +613,18 @@
     }
 
     let text = '*HURGHADA 2026 – RESEPLAN*\n\n';
-    text += formatSection(confirmed, 'BEKRÄFTADE AKTIVITETER');
-    if (wishlist.length) text += formatSection(wishlist, 'ÖNSKEMÅL / RESERV');
-
+    text += section(confirmed, 'BEKRÄFTADE AKTIVITETER');
+    if (wishlist.length) text += section(wishlist, 'ÖNSKEMÅL / RESERV');
     try {
       await navigator.clipboard.writeText(text.trimEnd());
       showToast('Reseplan kopierad till urklipp');
-    } catch {
-      alert('Kunde inte komma åt urklipp.');
-    }
+    } catch { alert('Kunde inte komma åt urklipp.'); }
   }
 
-  // ── CARD GENERATOR ────────────────────────────────────────────────────────
+  // ── CARD IMAGE GENERATOR ───────────────────────────────────────────────────
   function getWrappedLines(ctx, text, maxW) {
     const words = text.split(' ');
-    const lines = [];
-    let line = '';
+    const lines = []; let line = '';
     for (const w of words) {
       const test = line ? line + ' ' + w : w;
       if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = w; }
@@ -785,42 +636,64 @@
 
   function cardRoundRect(ctx, x, y, w, h, r) {
     ctx.beginPath();
-    ctx.moveTo(x + r, y);
-    ctx.lineTo(x + w - r, y);
-    ctx.arcTo(x + w, y, x + w, y + r, r);
-    ctx.lineTo(x + w, y + h - r);
-    ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
-    ctx.lineTo(x + r, y + h);
-    ctx.arcTo(x, y + h, x, y + h - r, r);
-    ctx.lineTo(x, y + r);
-    ctx.arcTo(x, y, x + r, y, r);
+    ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.arcTo(x+w,y,x+w,y+r,r);
+    ctx.lineTo(x+w,y+h-r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+    ctx.lineTo(x+r,y+h); ctx.arcTo(x,y+h,x,y+h-r,r);
+    ctx.lineTo(x,y+r); ctx.arcTo(x,y,x+r,y,r);
     ctx.closePath();
   }
 
-  function generateCard(id) {
+  function getInfoLines(ctx, text, maxW, normalFont, boldFont) {
+    const wordList = [];
+    text.split('*').forEach((part, i) => {
+      const bold = i % 2 === 1;
+      part.split(/\s+/).filter(w => w).forEach(w => wordList.push({ w, bold }));
+    });
+    const lines = []; let lineWords = [], lineWidth = 0;
+    wordList.forEach(item => {
+      ctx.font = item.bold ? boldFont : normalFont;
+      const ww = ctx.measureText(item.w).width;
+      const sp = lineWords.length ? ctx.measureText(' ').width : 0;
+      if (lineWords.length && lineWidth + sp + ww > maxW) {
+        lines.push(lineWords); lineWords = [item]; lineWidth = ww;
+      } else { lineWords.push(item); lineWidth += sp + ww; }
+    });
+    if (lineWords.length) lines.push(lineWords);
+    return lines;
+  }
+
+  function drawInfoLine(ctx, lineWords, x, y, normalFont, boldFont, color) {
+    let cx = x;
+    lineWords.forEach((item, i) => {
+      ctx.font = item.bold ? boldFont : normalFont;
+      ctx.fillStyle = color;
+      if (i > 0) { ctx.fillText(' ', cx, y); cx += ctx.measureText(' ').width; }
+      ctx.fillText(item.w, cx, y);
+      cx += ctx.measureText(item.w).width;
+    });
+  }
+
+  function buildCardCanvas(id) {
     const a = byId(id);
     const W = 900, H = 1600;
-
-    const F_NAME = 'bold 70px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
-    const F_DATE = '600 40px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
-    const F_TIME = '400 30px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
-    const F_INFO = '400 22px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
-    const NAME_LH = 88, INFO_LH = 36, BP = 32;
+    const F_NAME      = 'bold 70px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
+    const F_DATE      = '600 40px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
+    const F_TIME      = '400 30px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
+    const F_INFO      = '400 28px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
+    const F_INFO_BOLD = '700 28px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
+    const NAME_LH = 88, INFO_LH = 44, BP = 32;
 
     const tmp = document.createElement('canvas').getContext('2d');
     tmp.font = F_NAME;
     const nameLines = getWrappedLines(tmp, a.name, W - 180);
     let infoLines = [];
-    if (a.information) {
-      tmp.font = F_INFO;
-      infoLines = getWrappedLines(tmp, a.information, W - 220);
-    }
+    if (a.information) { infoLines = getInfoLines(tmp, a.information, W - 220, F_INFO, F_INFO_BOLD); }
 
-    const nameH = nameLines.length * NAME_LH;
-    const dateH = a.day                          ? 72 : 0;
-    const timeH = (a.startTime || a.duration)    ? 56 : 0;
-    const infoH = infoLines.length               ? infoLines.length * INFO_LH + BP * 2 + 48 : 0;
-    const contentH = nameH + 56 + dateH + timeH + infoH;
+    const nameH    = nameLines.length * NAME_LH;
+    const dateH    = a.day                       ? 72 : 0;
+    const timeH    = (a.startTime || a.duration) ? 56 : 0;
+    const infoH    = infoLines.length ? infoLines.length * INFO_LH + BP * 2 + 48 : 0;
+    const contentH = nameH + 24 + dateH + timeH + infoH;
 
     const zoneTop = 150, zoneBot = H - 150;
     const cy0 = Math.max(zoneTop, Math.round((zoneTop + zoneBot) / 2 - contentH / 2));
@@ -830,73 +703,83 @@
     const ctx = canvas.getContext('2d');
 
     const bg = ctx.createLinearGradient(0, 0, W * 0.5, H);
-    bg.addColorStop(0, '#0c1f34');
-    bg.addColorStop(1, '#102d45');
+    bg.addColorStop(0, '#0c1f34'); bg.addColorStop(1, '#102d45');
     ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
 
-    const glow = ctx.createRadialGradient(W / 2, cy0 + contentH / 2, 0, W / 2, cy0 + contentH / 2, W * 0.75);
-    glow.addColorStop(0, 'rgba(217,141,21,0.08)');
-    glow.addColorStop(1, 'rgba(0,0,0,0)');
+    const glow = ctx.createRadialGradient(W/2, cy0+contentH/2, 0, W/2, cy0+contentH/2, W*0.75);
+    glow.addColorStop(0, 'rgba(217,141,21,0.08)'); glow.addColorStop(1, 'rgba(0,0,0,0)');
     ctx.fillStyle = glow; ctx.fillRect(0, 0, W, H);
 
     ctx.strokeStyle = 'rgba(255,255,255,0.02)'; ctx.lineWidth = 1;
-    for (let y = 0; y < H; y += 34) {
-      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
-    }
+    for (let y = 0; y < H; y += 34) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
 
     ctx.fillStyle = '#d98d15'; ctx.fillRect(0, 0, W, 6);
-
     ctx.fillStyle = 'rgba(217,141,21,0.9)';
     ctx.font = '700 17px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('H U R G H A D A  2 0 2 6', W / 2, 58);
-
+    ctx.fillText('H U R G H A D A  2 0 2 6', W/2, 58);
     ctx.strokeStyle = 'rgba(217,141,21,0.3)'; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(90, 76); ctx.lineTo(W - 90, 76); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(90, 76); ctx.lineTo(W-90, 76); ctx.stroke();
 
     let cy = cy0;
-
     ctx.fillStyle = '#f0e8d0'; ctx.font = F_NAME; ctx.textAlign = 'center';
-    nameLines.forEach((l, i) => ctx.fillText(l, W / 2, cy + i * NAME_LH));
+    nameLines.forEach((l, i) => ctx.fillText(l, W/2, cy + i * NAME_LH));
     cy += nameH + 24;
-
-    ctx.strokeStyle = 'rgba(217,141,21,0.85)'; ctx.lineWidth = 2.5;
-    ctx.beginPath(); ctx.moveTo(W / 2 - 52, cy); ctx.lineTo(W / 2 + 52, cy); ctx.stroke();
-    cy += 32;
 
     if (a.day) {
       ctx.fillStyle = '#e4d9c0'; ctx.font = F_DATE; ctx.textAlign = 'left';
-      ctx.fillText(formatDay(a.day), 100, cy);
-      cy += dateH;
+      ctx.fillText(formatDay(a.day), 100, cy); cy += dateH;
     }
-
     if (a.startTime || a.duration) {
-      ctx.fillStyle = 'rgba(228,217,192,0.5)'; ctx.font = F_TIME; ctx.textAlign = 'left';
-      ctx.fillText([a.startTime, a.duration].filter(Boolean).join('   ·   '), 100, cy);
+      ctx.font = F_TIME; ctx.textAlign = 'left';
+      let tx = 100;
+      if (a.startTime) {
+        ctx.fillStyle = '#ff3cac';
+        ctx.fillText(a.startTime, tx, cy);
+        tx += ctx.measureText(a.startTime).width;
+      }
+      if (a.startTime && a.duration) {
+        ctx.fillStyle = 'rgba(228,217,192,0.45)';
+        const sep = '   ·   ';
+        ctx.fillText(sep, tx, cy);
+        tx += ctx.measureText(sep).width;
+      }
+      if (a.duration) {
+        ctx.fillStyle = 'rgba(228,217,192,0.45)';
+        ctx.fillText(a.duration, tx, cy);
+      }
       cy += timeH;
     }
-
     if (infoLines.length) {
       cy += 48;
       const bx = 80, bw = W - 160, bh = infoLines.length * INFO_LH + BP * 2;
       cardRoundRect(ctx, bx, cy, bw, bh, 14);
       ctx.fillStyle = 'rgba(255,255,255,0.052)'; ctx.fill();
       ctx.strokeStyle = 'rgba(255,255,255,0.10)'; ctx.lineWidth = 1; ctx.stroke();
-      ctx.fillStyle = 'rgba(240,232,208,0.65)'; ctx.font = F_INFO; ctx.textAlign = 'left';
-      infoLines.forEach((l, i) => ctx.fillText(l, bx + BP, cy + BP + 16 + i * INFO_LH));
+      infoLines.forEach((line, i) => drawInfoLine(ctx, line, bx+BP, cy+BP+22+i*INFO_LH, F_INFO, F_INFO_BOLD, '#ffffff'));
     }
 
     ctx.strokeStyle = 'rgba(217,141,21,0.3)'; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(90, H - 76); ctx.lineTo(W - 90, H - 76); ctx.stroke();
-
+    ctx.beginPath(); ctx.moveTo(90, H-76); ctx.lineTo(W-90, H-76); ctx.stroke();
     ctx.fillStyle = 'rgba(217,141,21,0.6)';
     ctx.font = '700 17px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('H U R G H A D A  2 0 2 6', W / 2, H - 48);
+    ctx.fillText('H U R G H A D A  2 0 2 6', W/2, H-48);
+    ctx.fillStyle = '#d98d15'; ctx.fillRect(0, H-6, W, 6);
 
-    ctx.fillStyle = '#d98d15'; ctx.fillRect(0, H - 6, W, 6);
+    return canvas;
+  }
 
-    showCardPreview(canvas, a.name);
+  async function generateCard(id) {
+    const canvas = buildCardCanvas(id);
+    const name   = byId(id).name;
+    try {
+      const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+      await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+      showToast('Bildkort kopierat till urklipp');
+    } catch {
+      showCardPreview(canvas, name);
+    }
   }
 
   let _cardCanvas = null;
@@ -905,24 +788,19 @@
     _cardCanvas = canvas;
     document.getElementById('card-modal-title').textContent = name;
     document.getElementById('card-img').src = canvas.toDataURL('image/png');
-
     document.getElementById('card-dl-btn').onclick = () => {
       const link = document.createElement('a');
-      link.download = name.replace(/[^\w\sÅÄÖåäö]/g, '').trim().replace(/\s+/g, '-').toLowerCase() + '.png';
+      link.download = name.replace(/[^\w\sÅÄÖåäö]/g,'').trim().replace(/\s+/g,'-').toLowerCase() + '.png';
       link.href = canvas.toDataURL('image/png');
       link.click();
     };
-
     document.getElementById('card-copy-img-btn').onclick = async () => {
       try {
         const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
         await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
         showToast('Bild kopierad till urklipp');
-      } catch {
-        showToast('Klicka "Ladda ner" och dela bilden');
-      }
+      } catch { showToast('Klicka "Ladda ner" och dela bilden'); }
     };
-
     document.getElementById('card-overlay').style.display = 'flex';
   }
 
@@ -955,9 +833,7 @@
       await w.write(JSON.stringify(payload, null, 2));
       await w.close();
       showToast('Sparat!');
-    } catch (err) {
-      if (err.name !== 'AbortError') alert('Kunde inte spara: ' + err.message);
-    }
+    } catch (err) { if (err.name !== 'AbortError') alert('Kunde inte spara: ' + err.message); }
   }
 
   async function loadJSON() {
@@ -972,9 +848,7 @@
       order      = data.order;
       nextId     = Math.max(0, ...ACTIVITIES.map(a => a.id)) + 1;
       render();
-    } catch (err) {
-      if (err.name !== 'AbortError') alert('Kunde inte ladda — ' + err.message);
-    }
+    } catch (err) { if (err.name !== 'AbortError') alert('Kunde inte ladda — ' + err.message); }
   }
 
   // ── KEYBOARD ───────────────────────────────────────────────────────────────
@@ -989,15 +863,15 @@
 
   // ── SAMPLE DATA ────────────────────────────────────────────────────────────
   ACTIVITIES = [
-    { id: 1, name: 'Välkomstmiddag vid havet',    day: '2026-07-18', startTime: '19:00', duration: '3h',      information: 'Hotellets strandrestaurang. Ta med festkläder.',                                            confirmed: true  },
-    { id: 2, name: 'Snorkling vid Giftun Island', day: '2026-07-19', startTime: '08:00', duration: 'Halvdag', information: 'Hotellets brygga. Ta med badkläder, solskydd och handduk. Medhav mat och dryck för dagen.', confirmed: true  },
-    { id: 3, name: 'Glassbottenbåt',              day: '2026-07-19', startTime: '14:30', duration: '2h',      information: 'Gamla hamnen. Solglasögon och kamera rekommenderas.',                                       confirmed: true  },
-    { id: 4, name: 'Ökenjeep safari',             day: '2026-07-20', startTime: '14:30', duration: 'Halvdag', information: 'Samling vid hotellentré. Ta med långa byxor, solhatt och vatten.',                          confirmed: true  },
-    { id: 5, name: 'Dykning för nybörjare',       day: '2026-07-21', startTime: '08:30', duration: '3h',      information: 'Divingcentret vid hotellet. Obligatorisk säkerhetsgenomgång ingår.',                        confirmed: true  },
-    { id: 6, name: 'Parasailing',                 day: '2026-07-20', startTime: '11:00', duration: '1h',      information: 'Centralstranden. Badkläder medhav.',                                                        confirmed: false },
-    { id: 7, name: 'Kamelridning vid solnedgång', day: '2026-07-22', startTime: '17:00', duration: '2h',      information: 'Ökensafaribasen. Ta med långa byxor och robusta skor.',                                     confirmed: false },
-    { id: 8, name: 'Spa & hammam',                day: '2026-07-21', startTime: '10:00', duration: '2h',      information: 'Hotellets spaavdelning. Medhav bokningsbekräftelse.',                                       confirmed: false },
-    { id: 9, name: 'Quad bike i öknen',           day: '2026-07-22', startTime: '15:00', duration: '3h',      information: 'Ökensafaribasen. Ta med långa byxor, skor och solglasögon.',                                confirmed: false },
+    { id:1, name:'Välkomstmiddag vid havet',    day:'2026-07-18', startTime:'19:00', duration:'3h',      information:'Hotellets strandrestaurang. Ta med festkläder.',                                            confirmed:true  },
+    { id:2, name:'Snorkling vid Giftun Island', day:'2026-07-19', startTime:'08:00', duration:'Halvdag', information:'Hotellets brygga. Ta med badkläder, solskydd och handduk. Medhav mat och dryck för dagen.', confirmed:true  },
+    { id:3, name:'Glassbottenbåt',              day:'2026-07-19', startTime:'14:30', duration:'2h',      information:'Gamla hamnen. Solglasögon och kamera rekommenderas.',                                       confirmed:true  },
+    { id:4, name:'Ökenjeep safari',             day:'2026-07-20', startTime:'14:30', duration:'Halvdag', information:'Samling vid hotellentré. Ta med långa byxor, solhatt och vatten.',                          confirmed:true  },
+    { id:5, name:'Dykning för nybörjare',       day:'2026-07-21', startTime:'08:30', duration:'3h',      information:'Divingcentret vid hotellet. Obligatorisk säkerhetsgenomgång ingår.',                        confirmed:true  },
+    { id:6, name:'Parasailing',                 day:'2026-07-20', startTime:'11:00', duration:'1h',      information:'Centralstranden. Badkläder medhav.',                                                        confirmed:false },
+    { id:7, name:'Kamelridning vid solnedgång', day:'2026-07-22', startTime:'17:00', duration:'2h',      information:'Ökensafaribasen. Ta med långa byxor och robusta skor.',                                     confirmed:false },
+    { id:8, name:'Spa & hammam',                day:'2026-07-21', startTime:'10:00', duration:'2h',      information:'Hotellets spaavdelning. Medhav bokningsbekräftelse.',                                       confirmed:false },
+    { id:9, name:'Quad bike i öknen',           day:'2026-07-22', startTime:'15:00', duration:'3h',      information:'Ökensafaribasen. Ta med långa byxor, skor och solglasögon.',                                confirmed:false },
   ];
   order  = ACTIVITIES.map(a => a.id);
   nextId = ACTIVITIES.length + 1;
