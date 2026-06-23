@@ -799,13 +799,13 @@
 
   function generateCard(id) {
     const a = byId(id);
-    const W = 900, H = 2000;
+    const W = 900, H = 1600;
 
-    const F_NAME = 'bold 60px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
-    const F_DATE = '600 32px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
-    const F_TIME = '400 24px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
-    const F_INFO = '400 18px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
-    const NAME_LH = 78, INFO_LH = 30, BP = 32;
+    const F_NAME = 'bold 70px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
+    const F_DATE = '600 40px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
+    const F_TIME = '400 30px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
+    const F_INFO = '400 22px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
+    const NAME_LH = 88, INFO_LH = 36, BP = 32;
 
     const tmp = document.createElement('canvas').getContext('2d');
     tmp.font = F_NAME;
@@ -817,12 +817,12 @@
     }
 
     const nameH = nameLines.length * NAME_LH;
-    const dateH = a.day                          ? 62 : 0;
-    const timeH = (a.startTime || a.duration)    ? 50 : 0;
+    const dateH = a.day                          ? 72 : 0;
+    const timeH = (a.startTime || a.duration)    ? 56 : 0;
     const infoH = infoLines.length               ? infoLines.length * INFO_LH + BP * 2 + 48 : 0;
     const contentH = nameH + 56 + dateH + timeH + infoH;
 
-    const zoneTop = 180, zoneBot = H - 180;
+    const zoneTop = 150, zoneBot = H - 150;
     const cy0 = Math.max(zoneTop, Math.round((zoneTop + zoneBot) / 2 - contentH / 2));
 
     const canvas = document.createElement('canvas');
@@ -846,13 +846,13 @@
 
     ctx.fillStyle = '#d98d15'; ctx.fillRect(0, 0, W, 6);
 
-    ctx.fillStyle = 'rgba(217,141,21,0.8)';
-    ctx.font = '700 13px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
+    ctx.fillStyle = 'rgba(217,141,21,0.9)';
+    ctx.font = '700 17px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('G R U P P R E S A N   ·   H U R G H A D A  2 0 2 6', W / 2, 60);
+    ctx.fillText('H U R G H A D A  2 0 2 6', W / 2, 58);
 
     ctx.strokeStyle = 'rgba(217,141,21,0.3)'; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(90, 80); ctx.lineTo(W - 90, 80); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(90, 76); ctx.lineTo(W - 90, 76); ctx.stroke();
 
     let cy = cy0;
 
@@ -887,12 +887,12 @@
     }
 
     ctx.strokeStyle = 'rgba(217,141,21,0.3)'; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(90, H - 80); ctx.lineTo(W - 90, H - 80); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(90, H - 76); ctx.lineTo(W - 90, H - 76); ctx.stroke();
 
     ctx.fillStyle = 'rgba(217,141,21,0.6)';
-    ctx.font = '700 13px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
+    ctx.font = '700 17px -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('H U R G H A D A  2 0 2 6', W / 2, H - 50);
+    ctx.fillText('H U R G H A D A  2 0 2 6', W / 2, H - 48);
 
     ctx.fillStyle = '#d98d15'; ctx.fillRect(0, H - 6, W, 6);
 
